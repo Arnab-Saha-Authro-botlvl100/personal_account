@@ -34,129 +34,72 @@ Route::get('/dashboard', function () {
 
     $notificationCount = $notifications->count();
 
-    $totalCash = Transaction::where('transaction_type', 'cash')->sum('amount');
-    $totalBank = Transaction::where('transaction_type', 'bank')->sum('amount');
+    $totalCashReceive = Receive::where('transaction_method', 'cash')->where('user', Auth::id())->sum('amount');
+    $totalBankReceive = Receive::where('transaction_method', 'bank')->where('user', Auth::id())->sum('amount');
+    
+    $totalCashPayment = Payment::where('transaction_method', 'cash')->where('user', Auth::id())->sum('amount');
+    $totalBankPayment = Payment::where('transaction_method', 'bank')->where('user', Auth::id())->sum('amount');
     
     $monthlyTransactions = Transaction::selectRaw('MONTH(created_at) as month, transaction_type, SUM(amount) as total')
     ->where('user', Auth::id()) // Filter by the authenticated user
     ->groupBy(DB::raw('MONTH(created_at)'), 'transaction_type')
     ->get();
 
-
-    // $monthlyBankTransactions = Transaction::selectRaw('
-    //     MONTH(transactions.created_at) as month, 
-    //     transactions.bank_name, 
-    //     SUM(transactions.amount) as total
-    // ')
-    // ->where('transactions.transaction_type', 'bank')
-    // ->where('transactions.user', Auth::id()) // Filter transactions by logged-in user
-    // ->leftJoin('receives', function ($join) {
-    //     $join->on('receives.bank_name', '=', 'transactions.id')
-    //         ->where('receives.user', Auth::id())
-    //         ->where('receives.transaction_method', 'bank');
-    // })
-    // ->leftJoin('payments', function ($join) {
-    //     $join->on('payments.bank_name', '=', 'transactions.id')
-    //         ->where('payments.user', Auth::id())
-    //         ->where('payments.transaction_method', 'bank');
-    // })
-    // ->groupBy(DB::raw('MONTH(transactions.created_at)'), 'transactions.bank_name')
-    // ->get();
-  
-    $currentYear = date('Y'); // Get the current year
-
-// Step 1: Fetch all transactions for the logged-in user
-$transactions = Transaction::where('user', Auth::id()) // Filter by the logged-in user
-    ->where('is_delete', 0) // Exclude deleted transactions
-    ->get();
-
-// Step 2: Fetch all receives and payments for the logged-in user
-$receives = Receive::where('user', Auth::id())->get();
-$payments = Payment::where('user', Auth::id())->get();
-
-// Step 3: Calculate receive and payment amounts for each transaction
-$transactionsWithAmounts = $transactions->map(function ($transaction) use ($receives, $payments) {
-    // Filter receives for this transaction
-    $transactionReceives = $receives->filter(function ($receive) use ($transaction) {
-        return ($receive->transaction_method === 'cash' && $receive->user === Auth::id()) ||
-               ($receive->transaction_method === 'bank' && $receive->bank_name == $transaction->id);
-    });
-
-    // Filter payments for this transaction
-    $transactionPayments = $payments->filter(function ($payment) use ($transaction) {
-        return ($payment->transaction_method === 'cash' && $payment->user === Auth::id()) ||
-               ($payment->transaction_method === 'bank' && $payment->bank_name == $transaction->id);
-    });
-
-    // Calculate receive and payment totals
-    $receiveTotal = $transactionReceives->sum('amount');
-    $paymentTotal = $transactionPayments->sum('amount');
-
-    // Add receive and payment amounts to the transaction
-    $transaction->receive_total = $receiveTotal;
-    $transaction->payment_total = $paymentTotal;
-
-    return $transaction;
-});
-
-// Step 4: Filter transactions by months of the current year
-$monthlyTransactions_2 = $transactionsWithAmounts->filter(function ($transaction) use ($currentYear) {
-    return date('Y', strtotime($transaction->created_at)) == $currentYear; // Filter by current year
-})->groupBy(function ($transaction) {
-    return date('n', strtotime($transaction->created_at)); // Group by month (1 to 12)
-});
-
-// Step 5: Ensure all 12 months are included and handle multiple methods/banks per month
-$allMonths = range(1, 12); // Array of months (1 to 12)
-$monthlyTransactions_2 = collect($allMonths)->map(function ($month) use ($monthlyTransactions_2) {
-    $transactionsForMonth = $monthlyTransactions_2->get($month, collect());
-
-    // Group transactions by method and bank_name
-    $groupedTransactions = $transactionsForMonth->groupBy(function ($transaction) {
-        return $transaction->transaction_type . '-' . $transaction->bank_name; // Unique key for method and bank_name
-    });
-
-    // If no transactions exist for this month, add default values for cash and bank
-    if ($groupedTransactions->isEmpty()) {
-        return [
-            [
-                'month' => $month,
-                'method' => 'cash',
-                'bank_name' => null,
+    $currentYear = date('Y');
+    $currentMonth = date('n'); // Get the current month (1-12)
+    
+    $transactions = Transaction::where('user', Auth::id())
+        ->where('transaction_type', 'bank') 
+        ->where('is_delete', 0) // Exclude deleted transactions
+        ->get();
+    
+    $receives = Receive::where('user', Auth::id())->get();
+    $payments = Payment::where('user', Auth::id())->get();
+    
+    // Prepare a collection to hold the totals for each bank
+    $bankTotals = [];
+    
+    // Loop through each transaction to calculate receive and payment totals
+    foreach ($transactions as $transaction) {
+        // Filter receives for this transaction
+        $transactionReceives = $receives->filter(function ($receive) use ($transaction) {
+            return ($receive->transaction_method === 'bank' && $receive->bank_name == $transaction->id);
+        });
+    
+        // Filter payments for this transaction
+        $transactionPayments = $payments->filter(function ($payment) use ($transaction) {
+            return ($payment->transaction_method === 'bank' && $payment->bank_name == $transaction->id);
+        });
+    
+        // Calculate receive and payment totals
+        $receiveTotal = $transactionReceives->sum('amount');
+        $paymentTotal = $transactionPayments->sum('amount');
+    
+        // Group totals by bank name
+        $bankName = $transaction->bank_name ?? 'No Bank'; // Use 'No Bank' for transactions without a bank_name
+    
+        if (!isset($bankTotals[$bankName])) {
+            $bankTotals[$bankName] = [
                 'receive_total' => 0,
-                'payment_total' => 0
-            ],
-            [
-                'month' => $month,
-                'method' => 'bank',
-                'bank_name' => 'No Bank',
-                'receive_total' => 0,
-                'payment_total' => 0
-            ]
-        ];
+                'payment_total' => 0,
+            ];
+        }
+    
+        // Accumulate totals
+        $bankTotals[$bankName]['receive_total'] += $receiveTotal;
+        $bankTotals[$bankName]['payment_total'] += $paymentTotal;
     }
-
-    // Process each group
-    return $groupedTransactions->map(function ($group, $key) use ($month) { // Pass $month into the inner map
-        $method = explode('-', $key)[0]; // Extract method from the key
-        $bankName = explode('-', $key)[1]; // Extract bank_name from the key
-
-        // Calculate total receive and payment amounts for the group
-        $receiveTotal = $group->sum('receive_total');
-        $paymentTotal = $group->sum('payment_total');
-
+    
+    // Prepare data for the chart
+    $chartData = collect($bankTotals)->map(function ($totals, $bankName) {
         return [
-            'month' => $month, // Use the $month variable
-            'method' => $method,
-            'bank_name' => $bankName === 'null' ? null : $bankName, // Convert 'null' string to null
-            'receive_total' => $receiveTotal,
-            'payment_total' => $paymentTotal
+            'bank_name' => $bankName,
+            'receive_total' => $totals['receive_total'],
+            'payment_total' => $totals['payment_total'],
         ];
     })->values(); // Reset keys
-})->flatten(1); // Flatten the nested collections
-
-// Debug the output
-// dd($monthlyTransactions_2);
+    
+   
 // Debug the output
     $lowBalanceThreshold = 500; // Set a minimum balance threshold
     $lowBalanceAccounts = Transaction::where('amount', '<', $lowBalanceThreshold)->where('user', Auth::id())
@@ -176,13 +119,10 @@ $monthlyTransactions_2 = collect($allMonths)->map(function ($month) use ($monthl
         ->groupBy('suppliers.name')
         ->get();
     
-    // dd($supplierProfits, $agentProfits);
-
-
-    // dd($lowBalanceAccounts);
-    // Pass data to the view
-    return view('dashboard', compact('notifications', 'notificationCount', 'totalCash', 'totalBank', 'monthlyTransactions',
-    'agentProfits', 'supplierProfits', 'monthlyTransactions_2', 'lowBalanceAccounts'));
+  
+    return view('dashboard', compact('notifications', 'notificationCount', 'totalCashReceive', 'totalCashPayment',
+    'totalBankReceive', 'totalBankPayment', 'monthlyTransactions',
+    'agentProfits', 'supplierProfits', 'chartData', 'lowBalanceAccounts'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
@@ -296,3 +236,22 @@ use App\Http\Controllers\PreviousDueController;
 Route::post('/previous-due/store', [PreviousDueController::class, 'store'])->name('previousDue.store');
 Route::get('/previous-due', [PreviousDueController::class, 'index'])->name('previousDue.index');
 Route::delete('/previous-due/delete/{id}', [PreviousDueController::class, 'destroy'])->name('previousDue.delete');
+
+use App\Http\Controllers\BkashTokenizePaymentController;
+
+Route::group(['middleware' => ['web']], function () {
+    // Payment Routes for bKash
+    Route::get('/bkash/payment/{user_id}', [App\Http\Controllers\BkashTokenizePaymentController::class, 'index'])
+    ->name('bkash.payment.page'); 
+    Route::get('/bkash/create-payment/{user_id}', [App\Http\Controllers\BkashTokenizePaymentController::class,'createPayment'])->name('bkash-create-payment');
+    Route::get('/bkash/callback/{user_id}', [App\Http\Controllers\BkashTokenizePaymentController::class, 'callBack'])
+    ->name('bkash-callBack');
+
+    //search payment
+    Route::get('/bkash/search/{trxID}', [App\Http\Controllers\BkashTokenizePaymentController::class,'searchTnx'])->name('bkash-serach');
+
+    //refund payment routes
+    Route::get('/bkash/refund', [App\Http\Controllers\BkashTokenizePaymentController::class,'refund'])->name('bkash-refund');
+    Route::get('/bkash/refund/status', [App\Http\Controllers\BkashTokenizePaymentController::class,'refundStatus'])->name('bkash-refund-status');
+
+});

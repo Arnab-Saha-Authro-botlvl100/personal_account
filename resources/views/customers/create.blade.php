@@ -2,7 +2,7 @@
     <style>
         @media (min-width: 769px) {
             #main-content {
-                margin-left: 250px;
+                margin-left: 150px;
                 /* Match the width of the sidebar */
                 transition: 0.3s;
                 /* Smooth transition for margin */
@@ -18,53 +18,113 @@
         }
     </style>
     <!-- Custom Styles -->
-   <style>
-    /* Make the form responsive */
-/* #customer-form {
-    max-width: 800px;
-    width: 100%;
-    padding: 20px;
-    margin: 0 auto;
-    box-sizing: border-box; 
-} */
 
-/* Button styling */
-#add-customer-button {
-    width: 100%;
-    /* Make the button full width on mobile */
-    max-width: 200px;
-    /* Limit the button width on larger screens */
-    padding: 10px 15px;
-    box-sizing: border-box; /* Ensure padding is included in width */
-}
+    <style>
+        /* Button styling */
+        #add-customer-button {
+            width: 100%;
+            /* Make the button full width on mobile */
+            max-width: 200px;
+            /* Limit the button width on larger screens */
+            padding: 10px 15px;
+            box-sizing: border-box;
+            /* Ensure padding is included in width */
+        }
 
-/* Media query for mobile devices */
-@media (max-width: 768px) {
-    #customer-form {
-        padding: 15px;
-        /* Reduce padding for smaller screens */
+        /* Media query for mobile devices */
+        @media (max-width: 768px) {
+            #customer-form {
+                padding: 15px;
+                /* Reduce padding for smaller screens */
+            }
+
+            #add-customer-button {
+                max-width: 100%;
+                /* Make the button full width on mobile */
+            }
+        }
+
+        /* Add more responsiveness for larger screen sizes */
+        @media (min-width: 992px) {
+            #customer-form {
+                padding: 30px;
+                /* Add more padding for larger screens */
+            }
+
+            #add-customer-button {
+                max-width: 250px;
+                /* Adjust button width for larger screens */
+            }
+        }
+    </style>
+
+<style>
+    @media (max-width: 800px) {
+
+        #contentdiv{
+            width: 100%!important;
+        }
+        /* Make the table a block layout for mobile */
+        .table-responsive table,
+        .table-responsive thead,
+        .table-responsive tbody,
+        .table-responsive th,
+        .table-responsive td,
+        .table-responsive tr {
+            display: block;
+        }
+
+        /* Hide the table header on mobile */
+        .table-responsive thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+        /* Style each row as a block */
+        .table-responsive tr {
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        /* Style each cell as a block with left-aligned label and right-aligned data */
+        .table-responsive td {
+            border: none;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            padding-left: 50%; /* Space for the label */
+            text-align: right!important; /* Align data to the right */
+            font-size: 12px; /* Decrease font size */
+        }
+
+        /* Style the data-label (left side) */
+        .table-responsive td:before {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 45%; /* Width of the label */
+            padding-right: 10px;
+            white-space: nowrap;
+            content: attr(data-label);
+            font-weight: bold;
+            text-align: left!important; /* Align label to the left */
+            font-size: 12px; /* Decrease font size */
+        }
+
+        /* Adjust badge size for mobile */
+        .table-responsive .badge {
+            font-size: 10px; /* Decrease badge font size */
+            padding: 0.25rem 0.5rem; /* Adjust badge padding */
+        }
+
+        /* Adjust button size for mobile */
+        .table-responsive .btn-sm {
+            padding: 0.25rem 0.5rem; /* Decrease button padding */
+            font-size: 10px; /* Decrease button font size */
+        }
     }
+</style>
 
-    #add-customer-button {
-        max-width: 100%;
-        /* Make the button full width on mobile */
-    }
-}
-
-/* Add more responsiveness for larger screen sizes */
-@media (min-width: 992px) {
-    #customer-form {
-        padding: 30px;
-        /* Add more padding for larger screens */
-    }
-
-    #add-customer-button {
-        max-width: 250px;
-        /* Adjust button width for larger screens */
-    }
-}
-
-   </style>
     <!-- Add this in the head section -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @include('layouts.links')
@@ -107,10 +167,10 @@
     </div>
 
 
-        <div class="col-md-12 col-sm-12" id="main-content">
-          <div class="mt-4 mx-auto px-2" style="width: 100%;">
+    <div class="col-md-12 col-sm-12" id="main-content" style="transition: 0.3s;">
+        <div class="mt-4 mx-auto px-2" id="contentdiv" style="width: 85%;">
             <div class="container-fluid" id="initial-div">
-                <div class="mt-4 mx-auto">
+                <div class="mt-4">
                     <div>
                         <button type="button" id="add-customer-button" class="btn btn-primary">Add New
                             Customer</button>
@@ -504,9 +564,10 @@
                                 <div class="card-header bg-info text-white text-center">
                                     <h5 class="mb-0">Customers</h5>
                                 </div>
-                                <div class="card-body  mx-auto table-responsive">
-                                    <div class="">
-                                        <table class="table table-hover table-bordered text-center align-middle" id="customer-table">
+                                <div class="card-body mx-auto">
+                                    <div class="table-responsive"> <!-- Add this wrapper -->
+                                        <table class="table table-hover table-bordered text-center align-middle"
+                                            id="customer-table">
                                             <thead class="table-dark">
                                                 <tr class="align-items-center">
                                                     <th scope="col" style="width: 7%;">Customer ID</th>
@@ -516,58 +577,89 @@
                                                     <th scope="col" style="width: 10%;">Supplier Name</th>
                                                     <th scope="col" style="width: 10%;">Agent Name</th>
                                                     <th scope="col" style="width: 10%;">Phone Number</th>
-                                                    <th scope="col" style="width: 10%;">Contract <br> Information</th>
+                                                    <th scope="col" style="width: 10%;">Contract <br> Information
+                                                    </th>
                                                     <th scope="col" style="width: 25%;">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($customers as $customer)
                                                     <tr class="align-items-center justify-content-center">
-                                                        <td class="fw-bold text-center">{{ $customer->customer_id }}</td>
-                                                        <td class="text-center">{{ $customer->created_at }}</td>
-                                                        <td class="text-start text-center">
+                                                        <td class="fw-bold text-center" data-label="Customer ID">
+                                                            {{ $customer->customer_id }}</td>
+                                                        <td class="text-center" data-label="Date">
+                                                            {{ $customer->created_at }}</td>
+                                                        <td class="text-start text-center"
+                                                            data-label="Customer">
                                                             <strong>{{ $customer->name }}</strong><br>
                                                             Passport: {{ $customer->passport_number }}<br>
                                                             Gender: {{ $customer->gender }}
                                                         </td>
-                                                        <td class="text-center">{{ $customer->service_name ?? 'N/A' }}</td>
-                                                        <td class="text-center">{{ $customer->supplier_name ?? 'N/A' }}</td>
-                                                        <td class="text-center">{{ $customer->agent_name ?? 'N/A' }}</td>
-                                                        <td class="text-center">{{ $customer->phone_number }}</td>
-                                                        <td>
+                                                        <td class="text-center" data-label="Service">
+                                                            {{ $customer->service_name ?? 'N/A' }}</td>
+                                                        <td class="text-center" data-label="Supplier">
+                                                            {{ $customer->supplier_name ?? 'N/A' }}</td>
+                                                        <td class="text-center" data-label="Agent">
+                                                            {{ $customer->agent_name ?? 'N/A' }}</td>
+                                                        <td class="text-center" data-label="Phone">
+                                                            {{ $customer->phone_number }}</td>
+                                                        <td data-label="Contract">
                                                             @if ($customer->invoice_no)
-                                                                <span class="badge bg-success text-white p-2 mt-3 fw-bold fs-4">{{ $customer->invoice_no }}</span>
+                                                                <span
+                                                                    class="badge bg-success text-white p-2 mt-3 fw-bold fs-4">{{ $customer->invoice_no }}</span>
                                                             @else
-                                                                <span class="badge bg-danger text-white mt-3 p-2 fw-bold fs-4">Pending</span>
+                                                                <span
+                                                                    class="badge bg-danger text-white mt-3 p-2 fw-bold fs-4">Pending</span>
                                                             @endif
                                                         </td>
-                                                        <td class="p-2 text-center">
+                                                        <td class="p-2 text-center" data-label="">
                                                             <!-- View Button -->
-                                                            <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#viewModal-{{ $customer->id }}">
+                                                            <button type="button" class="btn btn-sm btn-outline-dark"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#viewModal-{{ $customer->id }}">
                                                                 <i class="fas fa-eye"></i>
                                                             </button>
                                                             <!-- Edit Button -->
-                                                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editModal-{{ $customer->id }}">
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-outline-primary"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#editModal-{{ $customer->id }}">
                                                                 <i class="fas fa-edit"></i>
                                                             </button>
                                                             <!-- Delete Button -->
-                                                            <form action="{{ route('customers.destroy', $customer->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this customer?');">
+                                                            <form
+                                                                action="{{ route('customers.destroy', $customer->id) }}"
+                                                                method="POST" class="d-inline"
+                                                                onsubmit="return confirm('Are you sure you want to delete this customer?');">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-sm btn-outline-danger">Delete</button>
                                                             </form>
                                                             <!-- WhatsApp Button -->
-                                                            <a href="https://wa.me/+88{{ $customer->phone_number }}" target="_blank" class="btn btn-sm btn-outline-success">
+                                                            <a href="https://wa.me/+88{{ $customer->phone_number }}"
+                                                                target="_blank"
+                                                                class="btn btn-sm btn-outline-success">
                                                                 <i class="fab fa-whatsapp"></i>
                                                             </a>
                                                             <!-- Contract Button -->
                                                             @if ($customer->contract_id == null)
-                                                                <a href="javascript:void(0);" class="btn btn-sm btn-outline-warning" id="contractButton" data-agent="{{ $customer->agent_name }}" data-supplier="{{ $customer->supplier_name }}" data-customer-id="{{ $customer->customer_id }}" data-customer-actual-id="{{ $customer->id }}" data-agent-amount="{{ $customer->agent_contract }}" data-supplier-amount="{{ $customer->supplier_contract }}">
+                                                                <a href="javascript:void(0);"
+                                                                    class="btn btn-sm btn-outline-warning"
+                                                                    id="contractButton"
+                                                                    data-agent="{{ $customer->agent_name }}"
+                                                                    data-supplier="{{ $customer->supplier_name }}"
+                                                                    data-customer-id="{{ $customer->customer_id }}"
+                                                                    data-customer-actual-id="{{ $customer->id }}"
+                                                                    data-agent-amount="{{ $customer->agent_contract }}"
+                                                                    data-supplier-amount="{{ $customer->supplier_contract }}">
                                                                     <i class="fa-solid fa-file-contract"></i>
                                                                 </a>
                                                             @endif
                                                             <!-- Personal Info Button -->
-                                                            <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#customer_details_Modal-{{ $customer->id }}">
+                                                            <button type="button" class="btn btn-sm btn-outline-info"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#customer_details_Modal-{{ $customer->id }}">
                                                                 <i class="fa-solid fa-person"></i>
                                                             </button>
                                                         </td>
@@ -576,7 +668,6 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    
                                 </div>
                             </div>
 
@@ -864,197 +955,197 @@
                                                                     class="form-control @error('country_of_residence') is-invalid @enderror select2">
                                                                     <option value="">Select Country</option>
                                                                     @foreach ([
-                                                                        'Afghanistan',
-                                                                        'Albania',
-                                                                        'Algeria',
-                                                                        'Andorra',
-                                                                        'Angola',
-                                                                        'Antigua and Barbuda',
-                                                                        'Argentina',
-                                                                        'Armenia',
-                                                                        'Australia',
-                                                                        'Austria',
-                                                                        'Azerbaijan',
-                                                                        'Bahamas',
-                                                                        'Bahrain',
-                                                                        'Bangladesh',
-                                                                        'Barbados',
-                                                                        'Belarus',
-                                                                        'Belgium',
-                                                                        'Belize',
-                                                                        'Benin',
-                                                                        'Bhutan',
-                                                                        'Bolivia',
-                                                                        'Bosnia and Herzegovina',
-                                                                        'Botswana',
-                                                                        'Brazil',
-                                                                        'Brunei',
-                                                                        'Bulgaria',
-                                                                        'Burkina Faso',
-                                                                        'Burundi',
-                                                                        'Cabo Verde',
-                                                                        'Cambodia',
-                                                                        'Cameroon',
-                                                                        'Canada',
-                                                                        'Central African Republic',
-                                                                        'Chad',
-                                                                        'Chile',
-                                                                        'China',
-                                                                        'Colombia',
-                                                                        'Comoros',
-                                                                        'Congo',
-                                                                        'Costa Rica',
-                                                                        'Côte d\'Ivoire',
-                                                                        'Croatia',
-                                                                        'Cuba',
-                                                                        'Cyprus',
-                                                                        'Czechia',
-                                                                        'Denmark',
-                                                                        'Djibouti',
-                                                                        'Dominica',
-                                                                        'Dominican Republic',
-                                                                        'Ecuador',
-                                                                        'Egypt',
-                                                                        'El Salvador',
-                                                                        'Equatorial Guinea',
-                                                                        'Eritrea',
-                                                                        'Estonia',
-                                                                        'Eswatini',
-                                                                        'Ethiopia',
-                                                                        'Fiji',
-                                                                        'Finland',
-                                                                        'France',
-                                                                        'Gabon',
-                                                                        'Gambia',
-                                                                        'Georgia',
-                                                                        'Germany',
-                                                                        'Ghana',
-                                                                        'Greece',
-                                                                        'Grenada',
-                                                                        'Guatemala',
-                                                                        'Guinea',
-                                                                        'Guinea-Bissau',
-                                                                        'Guyana',
-                                                                        'Haiti',
-                                                                        'Holy See',
-                                                                        'Honduras',
-                                                                        'Hungary',
-                                                                        'Iceland',
-                                                                        'India',
-                                                                        'Indonesia',
-                                                                        'Iran',
-                                                                        'Iraq',
-                                                                        'Ireland',
-                                                                        'Israel',
-                                                                        'Italy',
-                                                                        'Jamaica',
-                                                                        'Japan',
-                                                                        'Jordan',
-                                                                        'Kazakhstan',
-                                                                        'Kenya',
-                                                                        'Kiribati',
-                                                                        'Kuwait',
-                                                                        'Kyrgyzstan',
-                                                                        'Laos',
-                                                                        'Latvia',
-                                                                        'Lebanon',
-                                                                        'Lesotho',
-                                                                        'Liberia',
-                                                                        'Libya',
-                                                                        'Liechtenstein',
-                                                                        'Lithuania',
-                                                                        'Luxembourg',
-                                                                        'Madagascar',
-                                                                        'Malawi',
-                                                                        'Malaysia',
-                                                                        'Maldives',
-                                                                        'Mali',
-                                                                        'Malta',
-                                                                        'Marshall Islands',
-                                                                        'Mauritania',
-                                                                        'Mauritius',
-                                                                        'Mexico',
-                                                                        'Micronesia',
-                                                                        'Moldova',
-                                                                        'Monaco',
-                                                                        'Mongolia',
-                                                                        'Montenegro',
-                                                                        'Morocco',
-                                                                        'Mozambique',
-                                                                        'Myanmar',
-                                                                        'Namibia',
-                                                                        'Nauru',
-                                                                        'Nepal',
-                                                                        'Netherlands',
-                                                                        'New Zealand',
-                                                                        'Nicaragua',
-                                                                        'Niger',
-                                                                        'Nigeria',
-                                                                        'North Korea',
-                                                                        'North Macedonia',
-                                                                        'Norway',
-                                                                        'Oman',
-                                                                        'Pakistan',
-                                                                        'Palau',
-                                                                        'Palestine State',
-                                                                        'Panama',
-                                                                        'Papua New Guinea',
-                                                                        'Paraguay',
-                                                                        'Peru',
-                                                                        'Philippines',
-                                                                        'Poland',
-                                                                        'Portugal',
-                                                                        'Qatar',
-                                                                        'Romania',
-                                                                        'Russia',
-                                                                        'Rwanda',
-                                                                        'Saint Kitts and Nevis',
-                                                                        'Saint Lucia',
-                                                                        'Saint Vincent and the Grenadines',
-                                                                        'Samoa',
-                                                                        'San Marino',
-                                                                        'Sao Tome and Principe',
-                                                                        'Saudi Arabia',
-                                                                        'Senegal',
-                                                                        'Serbia',
-                                                                        'Seychelles',
-                                                                        'Sierra Leone',
-                                                                        'Singapore',
-                                                                        'Slovakia',
-                                                                        'Slovenia',
-                                                                        'Solomon Islands',
-                                                                        'Somalia',
-                                                                        'South Africa',
-                                                                        'South Korea',
-                                                                        'South Sudan',
-                                                                        'Spain',
-                                                                        'Sri Lanka',
-                                                                        'Sudan',
-                                                                        'Suriname',
-                                                                        'Sweden',
-                                                                        'Switzerland',
-                                                                        'Syria',
-                                                                        'Tajikistan',
-                                                                        'Tanzania',
-                                                                        'Thailand',
-                                                                        'Timor-Leste',
-                                                                        'Togo',
-                                                                        'Tonga',
-                                                                        'Trinidad and Tobago',
-                                                                        'Tunisia',
-                                                                        'Turkey',
-                                                                        'Turkmenistan',
-                                                                        'Tuvalu',
-                                                                        'Uganda',
-                                                                        'Ukraine',
-                                                                        'United Arab Emirates',
-                                                                        'United Kingdom',
-                                                                        'United States of America',
-                                                                        'Uruguay',
-                                                                        'Uzbekistan',
-                                                                        'Vanuatu',
-                                                                        'Vatican City',
-                                                                    ] as $country)
+        'Afghanistan',
+        'Albania',
+        'Algeria',
+        'Andorra',
+        'Angola',
+        'Antigua and Barbuda',
+        'Argentina',
+        'Armenia',
+        'Australia',
+        'Austria',
+        'Azerbaijan',
+        'Bahamas',
+        'Bahrain',
+        'Bangladesh',
+        'Barbados',
+        'Belarus',
+        'Belgium',
+        'Belize',
+        'Benin',
+        'Bhutan',
+        'Bolivia',
+        'Bosnia and Herzegovina',
+        'Botswana',
+        'Brazil',
+        'Brunei',
+        'Bulgaria',
+        'Burkina Faso',
+        'Burundi',
+        'Cabo Verde',
+        'Cambodia',
+        'Cameroon',
+        'Canada',
+        'Central African Republic',
+        'Chad',
+        'Chile',
+        'China',
+        'Colombia',
+        'Comoros',
+        'Congo',
+        'Costa Rica',
+        'Côte d\'Ivoire',
+        'Croatia',
+        'Cuba',
+        'Cyprus',
+        'Czechia',
+        'Denmark',
+        'Djibouti',
+        'Dominica',
+        'Dominican Republic',
+        'Ecuador',
+        'Egypt',
+        'El Salvador',
+        'Equatorial Guinea',
+        'Eritrea',
+        'Estonia',
+        'Eswatini',
+        'Ethiopia',
+        'Fiji',
+        'Finland',
+        'France',
+        'Gabon',
+        'Gambia',
+        'Georgia',
+        'Germany',
+        'Ghana',
+        'Greece',
+        'Grenada',
+        'Guatemala',
+        'Guinea',
+        'Guinea-Bissau',
+        'Guyana',
+        'Haiti',
+        'Holy See',
+        'Honduras',
+        'Hungary',
+        'Iceland',
+        'India',
+        'Indonesia',
+        'Iran',
+        'Iraq',
+        'Ireland',
+        'Israel',
+        'Italy',
+        'Jamaica',
+        'Japan',
+        'Jordan',
+        'Kazakhstan',
+        'Kenya',
+        'Kiribati',
+        'Kuwait',
+        'Kyrgyzstan',
+        'Laos',
+        'Latvia',
+        'Lebanon',
+        'Lesotho',
+        'Liberia',
+        'Libya',
+        'Liechtenstein',
+        'Lithuania',
+        'Luxembourg',
+        'Madagascar',
+        'Malawi',
+        'Malaysia',
+        'Maldives',
+        'Mali',
+        'Malta',
+        'Marshall Islands',
+        'Mauritania',
+        'Mauritius',
+        'Mexico',
+        'Micronesia',
+        'Moldova',
+        'Monaco',
+        'Mongolia',
+        'Montenegro',
+        'Morocco',
+        'Mozambique',
+        'Myanmar',
+        'Namibia',
+        'Nauru',
+        'Nepal',
+        'Netherlands',
+        'New Zealand',
+        'Nicaragua',
+        'Niger',
+        'Nigeria',
+        'North Korea',
+        'North Macedonia',
+        'Norway',
+        'Oman',
+        'Pakistan',
+        'Palau',
+        'Palestine State',
+        'Panama',
+        'Papua New Guinea',
+        'Paraguay',
+        'Peru',
+        'Philippines',
+        'Poland',
+        'Portugal',
+        'Qatar',
+        'Romania',
+        'Russia',
+        'Rwanda',
+        'Saint Kitts and Nevis',
+        'Saint Lucia',
+        'Saint Vincent and the Grenadines',
+        'Samoa',
+        'San Marino',
+        'Sao Tome and Principe',
+        'Saudi Arabia',
+        'Senegal',
+        'Serbia',
+        'Seychelles',
+        'Sierra Leone',
+        'Singapore',
+        'Slovakia',
+        'Slovenia',
+        'Solomon Islands',
+        'Somalia',
+        'South Africa',
+        'South Korea',
+        'South Sudan',
+        'Spain',
+        'Sri Lanka',
+        'Sudan',
+        'Suriname',
+        'Sweden',
+        'Switzerland',
+        'Syria',
+        'Tajikistan',
+        'Tanzania',
+        'Thailand',
+        'Timor-Leste',
+        'Togo',
+        'Tonga',
+        'Trinidad and Tobago',
+        'Tunisia',
+        'Turkey',
+        'Turkmenistan',
+        'Tuvalu',
+        'Uganda',
+        'Ukraine',
+        'United Arab Emirates',
+        'United Kingdom',
+        'United States of America',
+        'Uruguay',
+        'Uzbekistan',
+        'Vanuatu',
+        'Vatican City',
+    ] as $country)
                                                                         <option value="{{ $country }}"
                                                                             {{ old('country_of_residence', $customer->country_of_residence) == $country ? 'selected' : '' }}>
                                                                             {{ $country }}

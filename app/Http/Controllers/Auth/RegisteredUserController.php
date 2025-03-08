@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Illuminate\Validation\Rules\Password;
-
+use Carbon\Carbon;
 
 class RegisteredUserController extends Controller
 {
@@ -47,6 +47,10 @@ class RegisteredUserController extends Controller
             'phone' => $request->phone,
             'address' => $request->address,
             'password' => Hash::make($request->password),
+            'payment_status' => 'completed', 
+            // Initially completed for new users
+            'last_payment_date' => Carbon::now(), // Set the current date as the last payment date
+            'next_payment_date' => Carbon::now()->addMonth(), // Free for 1 month
         ]);
 
         event(new Registered($user));

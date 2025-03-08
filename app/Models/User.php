@@ -23,6 +23,9 @@ class User extends Authenticatable
         'phone',
         'address',
         'password',
+        'payment_status', // Add this
+        'last_payment_date', // Add this
+        'next_payment_date', // Add this
     ];
 
     /**

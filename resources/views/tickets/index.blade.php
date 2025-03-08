@@ -397,15 +397,14 @@
     </div>
 
 
-
     <!-- Modal -->
-    <div class="modal fade" id="createTicketModal" tabindex="-1" aria-labelledby="createTicketModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="createTicketModal" tabindex="-1" aria-labelledby="createTicketModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="createTicketModalLabel">Create New Ticket</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <!-- Card Header with Close Button -->
+                <div class="modal-header card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title mb-0" id="createTicketModalLabel">Create New Ticket</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <!-- Form inside the modal -->
@@ -420,8 +419,7 @@
                                     <select name="customer_id" class="form-control" required>
                                         <option value="">Select Customer</option>
                                         @foreach ($customers as $customer)
-                                            <option value="{{ $customer->id }}">{{ $customer->name }}
-                                            </option>
+                                            <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -489,26 +487,15 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <!-- Baggage -->
-                                {{-- <div class="form-group">
-                                                <label for="baggage">Baggage</label>
-                                                <input type="checkbox" name="baggage" class="form-check-input">
-                                            </div> --}}
-
                                 <div class="form-check">
                                     <!-- Hidden input to ensure a value is always sent -->
                                     <input type="hidden" name="baggage" value="0">
-
                                     <!-- Checkbox for baggage -->
-                                    <input class="form-check-input" type="checkbox" name="baggage" value="1"
-                                        id="flexCheckIndeterminate">
-
-                                    <label class="form-check-label" for="flexCheckIndeterminate">
-                                        Baggage
-                                    </label>
+                                    <input class="form-check-input" type="checkbox" name="baggage" value="1" id="flexCheckIndeterminate">
+                                    <label class="form-check-label" for="flexCheckIndeterminate">Baggage</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
-
                                 <!-- Food -->
                                 <div class="form-group">
                                     <label for="food">Food</label>
@@ -517,7 +504,6 @@
                                         <option value="no">No</option>
                                     </select>
                                 </div>
-
                             </div>
                         </div>
 
