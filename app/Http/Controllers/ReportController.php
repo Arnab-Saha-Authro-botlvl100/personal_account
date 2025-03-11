@@ -467,22 +467,37 @@ class ReportController extends Controller
         }
     }
 
-    public function details_agent(){
+    
+    public function details_agent() {
+        // Get agents and join with previous_dues to fetch the amount
         $agents = Agent::where([
-            ['is_delete', 0],
-            ['is_active', 1],
-            ['user', Auth::id()]
-        ])->orderBy('created_at', 'desc')->get();
+                ['is_delete', 0],
+                ['is_active', 1],
+                ['agents.user', Auth::id()]
+            ])
+            ->leftJoin('previous_dues', 'agents.id', '=', 'previous_dues.agent_id')
+            ->select('agents.*', 'previous_dues.amount as opening_balance') // Select all agent columns and the opening_balance
+            ->orderBy('agents.created_at', 'desc')
+            ->get();
+    
+        // Return view with agents data including their opening balance from previous_dues
         return view('details.agent', compact('agents'));
     }
-    public function details_supplier(){
-        $suppliers = Supplier::where([
-            ['is_delete', 0],
-            ['is_active', 1],
-            ['user', Auth::id()]
-        ])->orderBy('created_at', 'desc')->get();    
+    
+    public function details_supplier() {
+        $suppliers = Supplier::select('suppliers.*', DB::raw('COALESCE(previous_dues.amount, 0) as opening_balance'))
+            ->leftJoin('previous_dues', 'previous_dues.supplier_id', '=', 'suppliers.id')  // Join with previous_dues table
+            ->where([
+                ['suppliers.is_delete', 0],
+                ['suppliers.is_active', 1],
+                ['suppliers.user', Auth::id()]
+            ])
+            ->orderBy('suppliers.created_at', 'desc')
+            ->get();
+    
         return view('details.supplier', compact('suppliers'));
     }
+    
     public function details_transaction(){
         $transactions = Transaction::where([
             ['is_delete', 0],
@@ -497,4 +512,5 @@ class ReportController extends Controller
         ])->orderBy('created_at', 'desc')->get();
         return view('details.service', compact('services'));
     }
+
 }

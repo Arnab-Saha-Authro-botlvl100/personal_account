@@ -86,24 +86,22 @@
 
     <div class="container-fluid" id="main-content" style="transition: 0.3s;">
         <div class="mt-4 mx-auto px-2" style="width: 100%;">
-            <div class="container-fluid mt-5 bg-light p-4 rounded shadow">
-                <h2 class="text-center text-primary mb-4" style="    background-color: antiquewhite;
-    border-radius: 10px;
-    padding: 10px;">Agents List</h2>
-
-                <div class="card shadow-lg">
-                    <div class="card-header bg-warning text-dark text-center">
+            <div class="container-fluid mt-5 bg-light p-4 rounded shadow-lg">
+               
+                <div class="card shadow-lg" style="width: 80%; margin-x:auto">
+                    <div class="card-header bg-warning text-dark text-center py-3">
                         <h5 class="mb-0">Agent Details</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered text-center align-middle" id="agent-table">
-                                <thead class="table-dark">
-                                    <tr>
+                                <thead>
+                                    <tr  class="table-warning">
                                         <th scope="col">Agent Name</th>
                                         <th scope="col">Phone Number</th>
                                         <th scope="col">Email</th>
                                         <th scope="col">Address</th>
+                                        <th scope="col">Due</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
@@ -114,40 +112,41 @@
                                         <td>{{ $agent->phone }}</td>
                                         <td>{{ $agent->email }}</td>
                                         <td>{{ $agent->address }}</td>
+                                        <td>{{ $agent->opening_balance }}</td>
                                         <td>
                                             <!-- Edit Button -->
                                             <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editAgentModal"
                                                 data-id="{{ $agent->id }}" data-name="{{ $agent->name }}" data-phone="{{ $agent->phone }}"
                                                 data-email="{{ $agent->email }}" data-address="{{ $agent->address }}">
-                                                <i class="fas fa-edit"></i>
+                                                <i class="fas fa-edit"></i> 
                                             </a>
                                             <!-- WhatsApp Chat -->
-                                            <a href="https://wa.me/+88{{ $agent->phone }}" target="_blank" class="btn btn-success btn-sm">
+                                            <a href="https://wa.me/+88{{ $agent->phone }}" target="_blank" class="btn btn-success btn-sm mx-2">
                                                 <i class="fab fa-whatsapp"></i> 
                                             </a>
+                                            <!-- Delete Button -->
                                             <a href="#" class="btn btn-danger btn-sm delete-btn" data-id="{{ $agent->id }}">
-                                                <i class="fas fa-trash"></i>
+                                                <i class="fas fa-trash"></i> 
                                             </a>
                                         </td>
                                     </tr>
                                     @endforeach
-                                    
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
+            
         </div>
     </div>
 
 
-    
-    <!--Agnet edit Modal -->
+    <!-- Agent Edit Modal -->
     <div class="modal fade" id="editAgentModal" tabindex="-1" aria-labelledby="editAgentModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header bg-info text-white">
                     <h5 class="modal-title" id="editAgentModalLabel">Edit Agent</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -155,23 +154,35 @@
                     <form id="editAgentForm">
                         @csrf
                         <input type="hidden" id="agentId" name="agentId">
+                        
+                        <!-- Agent Name -->
                         <div class="mb-3">
                             <label for="agentName" class="form-label">Name</label>
                             <input type="text" class="form-control" id="agentName" name="name" required>
                         </div>
+
+                        <!-- Agent Phone -->
                         <div class="mb-3">
                             <label for="agentPhone" class="form-label">Phone</label>
                             <input type="text" class="form-control" id="agentPhone" name="phone" required>
                         </div>
+
+                        <!-- Agent Email -->
                         <div class="mb-3">
                             <label for="agentEmail" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="agentEmail" name="email" >
+                            <input type="email" class="form-control" id="agentEmail" name="email">
                         </div>
+
+                        <!-- Agent Address -->
                         <div class="mb-3">
                             <label for="agentAddress" class="form-label">Address</label>
                             <input type="text" class="form-control" id="agentAddress" name="address">
                         </div>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
+
+                        <!-- Save Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success">Update</button>
+                        </div>
                     </form>
                 </div>
             </div>

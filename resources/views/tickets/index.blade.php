@@ -130,6 +130,38 @@
     </style>
 
 
+<style>
+    /* Default card width */
+    .custom-card {
+        width: 95%;
+        max-width: 1600px!important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Media query for viewport width >= 1806px */
+    @media (min-width: 1806px) {
+        .custom-card {
+            max-width: 1200px;
+        }
+    }
+
+    /* Reduce font size for table headers and cells */
+    #ticketTable th,
+    #ticketTable td {
+        font-size: 0.875rem;
+    }
+
+    /* Add a hover effect to table rows */
+    #ticketTable tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Style action buttons */
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+</style>
     @include('layouts.links')
 
     @if (session('success'))
@@ -148,7 +180,7 @@
     @endif
 
     <div class="container-fluid" id="main-content" style="transition: 0.3s;">
-        <div class="mt-4 mx-auto px-2" style="width: 100%;">
+        <div class="mt-4 mx-auto px-2" style="width: 100%;" >
             <div class="container-fluid" id="initial-div">
                 <!-- Heading Section with Custom Styling -->
                 <h1 class="text-center text-md-start fw-bold text-primary mb-2">
@@ -163,83 +195,85 @@
                     </a>
                 </div>
 
-                <!-- Ticket List Card -->
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">Ticket List</h5>
-                    </div>
-                    <div class="card-body">
-                        <!-- Table within card -->
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Customer ID</th>
-                                        <th>Flight Date</th>
-                                        <th>Airline</th>
-                                        <th>PNR No</th>
-                                        <th>Ticket No</th>
-                                        <th>Flight No</th>
-                                        <th>Sector</th>
-                                        <th>Class</th>
-                                        <th>Departure Time</th>
-                                        <th>Arrival Time</th>
-                                        <th>Baggage</th>
-                                        <th>Food</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($tickets as $index => $ticket)
+               <!-- Ticket List Card -->
+                <div class="d-flex align-items-center min-vh-100">
+                    <div class="card shadow-lg p-3 mb-5 bg-white rounded custom-card">
+                        <div class="card-header bg-primary fw-bold">
+                            Ticket List
+                        </div>
+                        <div class="card-body">
+                            <!-- Table within card -->
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover" id="ticketTable" style="font-size: 0.875rem;">
+                                    <thead>
                                         <tr>
-                                            <td>{{ $index + 1 }}</td>
-                                            <td>{{ $ticket->customer->name }}</td>
-                                            <td>{{ $ticket->flight_date }}</td>
-                                            <td>{{ $ticket->airline }}</td>
-                                            <td>{{ $ticket->pnr_no }}</td>
-                                            <td>{{ $ticket->ticket_no }}</td>
-                                            <td>{{ $ticket->flight_no }}</td>
-                                            <td>{{ $ticket->sector }}</td>
-                                            <td>{{ $ticket->class }}</td>
-                                            <td>{{ $ticket->departure_time }}</td>
-                                            <td>{{ $ticket->arrival_time }}</td>
-                                            <td>{{ $ticket->baggage ? 'Yes' : 'No' }}</td>
-                                            <td>{{ $ticket->food }}</td>
-                                            <td>
-                                                <a href="{{ route('tickets.show', $ticket->id) }}"
-                                                    class="btn btn-info btn-sm">
-                                                    <i class="fas fa-eye"></i> 
-                                                </a>
-                                                <a href="javascript:void(0)" class="btn btn-warning btn-sm edit-ticket"
-                                                    data-id="{{ $ticket->id }}"
-                                                    data-customer_id="{{ $ticket->customer->name }}"
-                                                    data-flight_date="{{ $ticket->flight_date }}"
-                                                    data-airline="{{ $ticket->airline }}"
-                                                    data-pnr_no="{{ $ticket->pnr_no }}"
-                                                    data-ticket_no="{{ $ticket->ticket_no }}"
-                                                    data-flight_no="{{ $ticket->flight_no }}"
-                                                    data-sector="{{ $ticket->sector }}"
-                                                    data-class="{{ $ticket->class }}"
-                                                    data-departure_time="{{ $ticket->departure_time }}"
-                                                    data-arrival_time="{{ $ticket->arrival_time }}"
-                                                    data-baggage="{{ $ticket->baggage }}"
-                                                    data-food="{{ $ticket->food }}">
-                                                    <i class="fas fa-edit"></i> 
-                                                </a>
-                                                <form action="{{ route('tickets.destroy', $ticket->id) }}" method="POST" style="display:inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this ticket?')">
-                                                        <i class="fas fa-trash-alt"></i> 
-                                                    </button>
-                                                </form>
-                                            </td>
-                                            
+                                            <th>ID</th>
+                                            <th>Customer</th>
+                                            <th>Flight Date</th>
+                                            <th>Airline</th>
+                                            <th>PNR No</th>
+                                            <th>Ticket No</th>
+                                            <th>Flight No</th>
+                                            <th>Sector</th>
+                                            <th>Class</th>
+                                            <th>Departure</th>
+                                            <th>Arrival</th>
+                                            <th>Baggage</th>
+                                            <th>Food</th>
+                                            <th>Actions</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($tickets as $index => $ticket)
+                                            <tr>
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $ticket->customer->name }}</td>
+                                                <td>{{ $ticket->flight_date }}</td>
+                                                <td>{{ $ticket->airline }}</td>
+                                                <td>{{ $ticket->pnr_no }}</td>
+                                                <td>{{ $ticket->ticket_no }}</td>
+                                                <td>{{ $ticket->flight_no }}</td>
+                                                <td>{{ $ticket->sector }}</td>
+                                                <td>{{ $ticket->class }}</td>
+                                                <td>{{ $ticket->departure_time }}</td>
+                                                <td>{{ $ticket->arrival_time }}</td>
+                                                <td>{{ $ticket->baggage ? 'Yes' : 'No' }}</td>
+                                                <td>{{ $ticket->food }}</td>
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        <a href="{{ route('tickets.show', $ticket->id) }}" class="btn btn-info btn-sm">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <a href="javascript:void(0)" class="btn btn-warning btn-sm edit-ticket"
+                                                            data-id="{{ $ticket->id }}"
+                                                            data-customer_id="{{ $ticket->customer->name }}"
+                                                            data-flight_date="{{ $ticket->flight_date }}"
+                                                            data-airline="{{ $ticket->airline }}"
+                                                            data-pnr_no="{{ $ticket->pnr_no }}"
+                                                            data-ticket_no="{{ $ticket->ticket_no }}"
+                                                            data-flight_no="{{ $ticket->flight_no }}"
+                                                            data-sector="{{ $ticket->sector }}"
+                                                            data-class="{{ $ticket->class }}"
+                                                            data-departure_time="{{ $ticket->departure_time }}"
+                                                            data-arrival_time="{{ $ticket->arrival_time }}"
+                                                            data-baggage="{{ $ticket->baggage }}"
+                                                            data-food="{{ $ticket->food }}">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <form action="{{ route('tickets.destroy', $ticket->id) }}" method="POST" style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this ticket?')">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -256,7 +290,7 @@
         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-warning text-white">
                     <h5 class="modal-title" id="editTicketModalLabel">Edit Ticket</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>

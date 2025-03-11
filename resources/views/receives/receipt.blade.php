@@ -48,7 +48,20 @@
                                 <span class="badge bg-warning text-dark">{{ number_format($latestReceive->amount, 2) }} BDT</span>
                             </p>
                             <p class="mb-1"><strong>Transaction Method:</strong> {{ ucfirst($latestReceive->transaction_method) }}</p>
-                            <p class="mb-1"><strong>Bank:</strong> {{ $latestReceive->bank_name ?? 'N/A' }}</p>
+                            <p class="mb-1"><strong>Bank:</strong>
+                                @php
+                                    // Using the full namespace for the Transaction model
+                                    $transaction = \App\Models\Transaction::where('id', $latestReceive->bank_name)->first();  // Use first() for a single result
+                            
+                                    // Check if the transaction exists
+                                    $bank_name = $transaction->bank_name ?? 'N/A';
+                                    $account_number = $transaction->account_number ?? 'N/A';
+                                    $branch_name = $transaction->branch_name ?? 'N/A';
+                                @endphp
+                                <strong>Bank Name:</strong> {{ $bank_name }} <br>
+                                <strong>Account Number:</strong> {{ $account_number }} <br>
+                                <strong>Branch Name:</strong> {{ $branch_name }}
+                            </p> 
                             <p class="mb-1"><strong>Note:</strong> {{ $latestReceive->note ?? 'N/A' }}</p>
                         </div>
                     </div>
@@ -108,7 +121,20 @@
                                 <span class="badge bg-warning text-dark">{{ number_format($latestReceive->amount, 2) }} BDT</span>
                             </p>
                             <p class="mb-1"><strong>Transaction Method:</strong> {{ ucfirst($latestReceive->transaction_method) }}</p>
-                            <p class="mb-1"><strong>Bank:</strong> {{ $latestReceive->bank_name ?? 'N/A' }}</p>
+                            <p class="mb-1"><strong>Bank:</strong>
+                                @php
+                                    // Using the full namespace for the Transaction model
+                                    $transaction = \App\Models\Transaction::where('id', $latestReceive->bank_name)->first();  // Use first() for a single result
+                            
+                                    // Check if the transaction exists
+                                    $bank_name = $transaction->bank_name ?? 'N/A';
+                                    $account_number = $transaction->account_number ?? 'N/A';
+                                    $branch_name = $transaction->branch_name ?? 'N/A';
+                                @endphp
+                                <strong>Bank Name:</strong> {{ $bank_name }} <br>
+                                <strong>Account Number:</strong> {{ $account_number }} <br>
+                                <strong>Branch Name:</strong> {{ $branch_name }}
+                            </p>
                             <p class="mb-1"><strong>Note:</strong> {{ $latestReceive->note ?? 'N/A' }}</p>
                         </div>
                     </div>

@@ -4,11 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Website Landing Page With Full Screen Draggable Image Slider - Html, Css & Javascript</title>
+    <title>Personal Accounting Software</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    {{-- <link rel="stylesheet" href="{{ asset('css/style.css') }}"> --}}
-    <link rel="stylesheet" href="{{ url('css/style.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     {{-- <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"> --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -16,7 +14,9 @@
 <body>
     <header>
         <div class="nav-bar">
-            <a href="" class="logo">Logo</a>
+            <a href="" class="logo">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" width="25%">
+            </a>
             <div class="navigation">
                 <div class="nav-items">
                     <!-- Close Button -->
@@ -68,37 +68,36 @@
                         Your browser does not support the video tag.
                     </video>
                     <div class="text-content">
-                        <h2 class="title">Autumn <span>Season</span></h2>
+                        <h2 class="title">Smart <span>Accounting</span></h2>
                         <p>
-                            Autumn, also known as fall in North American English, is one of the four temperate seasons.
-                            Outside the tropics, autumn marks the transition from summer to winter, in September or March.
-                            Autumn is the season when the duration of daylight becomes noticeably shorter and the temperature
-                            cools considerably.
+                            Manage your business finances effortlessly with our powerful accounting software.  
+                            Track income, expenses, invoices, and financial reports in real-time.  
+                            Automate tasks, ensure accuracy, and stay tax-compliant with ease.
                         </p>
                         <button class="read-btn">
-                            Read More <i class="fa-solid fa-arrow-right"></i>
+                            Get Started <i class="fa-solid fa-arrow-right"></i>
                         </button>
-                    </div>
+                    </div>                    
                 </div>
 
-                <!-- Slide 2: Winter -->
+               
                 <div class="swiper-slide dark-layer">
                     <video autoplay muted loop class="video-background">
                         <source src="{{ asset('videos/calculator_debt_crdt.mp4') }}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                     <div class="text-content">
-                        <h2 class="title">Winter <span>Season</span></h2>
+                        <h2 class="title">Financial <span>Management</span></h2>
                         <p>
-                            Winter is the coldest season of the year in polar and temperate zones. It occurs between autumn
-                            and spring. The tilt of Earth's axis causes seasons; winter occurs when a hemisphere is oriented
-                            away from the Sun. Different cultures define different dates as the start of winter, and some use
-                            a definition based on weather.
+                            Take control of your finances with our advanced accounting software.  
+                            Simplify bookkeeping, monitor transactions, and generate real-time financial reports effortlessly.  
+                            Stay ahead with automated invoicing, expense tracking, and tax compliance tools.
                         </p>
                         <button class="read-btn">
-                            Read More <i class="fa-solid fa-arrow-right"></i>
+                            Explore More <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
+                    
                 </div>
 
                 <!-- Slide 3: Summer -->
@@ -108,17 +107,16 @@
                         Your browser does not support the video tag.
                     </video>
                     <div class="text-content">
-                        <h2 class="title">Summer <span>Season</span></h2>
+                        <h2 class="title">Smart <span>Invoicing</span></h2>
                         <p>
-                            Summer is the hottest of the four temperate seasons, occurring after spring and before autumn. At
-                            or around the summer solstice, the earliest sunrise and latest sunset occurs, daylight hours are
-                            longest and dark hours are shortest, with day length decreasing as the season progresses after the
-                            solstice.
+                            Streamline your business transactions with automated invoicing.  
+                            Create, send, and track invoices effortlessly while ensuring timely payments.  
+                            Our system provides real-time insights, reducing manual workload and improving cash flow.
                         </p>
                         <button class="read-btn">
-                            Read More <i class="fa-solid fa-arrow-right"></i>
+                            Learn More <i class="fa-solid fa-arrow-right"></i>
                         </button>
-                    </div>
+                    </div>                    
                 </div>
 
                 <!-- Slide 4: Spring -->
@@ -128,17 +126,17 @@
                         Your browser does not support the video tag.
                     </video>
                     <div class="text-content">
-                        <h2 class="title">Spring <span>Season</span></h2>
+                        <h2 class="title">Financial <span>Insights</span></h2>
                         <p>
-                            Spring, also known as springtime, is one of the four temperate seasons, succeeding winter and
-                            preceding summer. There are various technical definitions of spring, but local usage of the term
-                            varies according to local climate, cultures and customs. When it is spring in the Northern
-                            Hemisphere, it is autumn in the Southern Hemisphere and vice versa.
+                            Gain real-time insights into your business finances with our intelligent accounting software.  
+                            Track revenue, expenses, and profit trends effortlessly.  
+                            Make data-driven decisions with automated reports and analytics to ensure sustainable growth.
                         </p>
                         <button class="read-btn">
-                            Read More <i class="fa-solid fa-arrow-right"></i>
+                            Discover More <i class="fa-solid fa-arrow-right"></i>
                         </button>
                     </div>
+                    
                 </div>
             </div>
 

@@ -2,7 +2,7 @@
     <style>
         @media (min-width: 769px) {
             #main-content {
-                margin-left: 250px;
+                margin-left: 150px;
                 /* Match the width of the sidebar */
                 transition: 0.3s;
                 /* Smooth transition for margin */
@@ -19,6 +19,10 @@
     </style>
     <!-- Custom Styles -->
     <style>
+        .message {
+            width: auto;
+        }
+
         /* Custom Table Styling */
         .table {
             font-size: 0.95rem;
@@ -71,126 +75,134 @@
         }
     </style>
 
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-    @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
+
+
+
 
     @include('layouts.links')
 
     <div class="container-fluid" id="main-content" style="transition: 0.3s;">
         <div class="mt-4 mx-auto px-2" style="width: 100%;">
             <div class="container-fluid mt-5 bg-light p-4 rounded shadow">
-                <h2 class="text-center text-primary mb-4" style="    background-color: antiquewhite;
-    border-radius: 10px;
-    padding: 10px;">Transaction List</h2>
-
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered text-center align-middle"
-                            id="transaction-table">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th scope="col" style="width: 10%;">Transaction <br> Type</th>
-                                    <th scope="col" style="width: 20%;">Bank Name</th>
-                                    <th scope="col" style="width: 20%;">A/C Number</th>
-                                    <th scope="col" style="width: 20%;">Branch Name</th>
-                                    <th scope="col" style="width: 10%;">Opening<br>Balance</th>
-                                    <th scope="col" style="width: 20%;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($transactions as $transaction)
+                <div class="card shadow-lg" style="width: 80%; margin: auto;">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h5 class="mb-0">Transaction Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered text-center align-middle"
+                                id="transaction-table">
+                                <thead class="thead-dark">
                                     <tr>
-                                        <td class="fw-bold">{{ $transaction->transaction_type }}</td>
-                                        <td>{{ $transaction->bank_name }}</td>
-                                        <td>{{ $transaction->account_number }}</td>
-                                        <td>{{ $transaction->branch_name }}</td>
-                                        <td>{{ $transaction->opening_balance }}</td>
-                                        <td>
-                                            <!-- Edit Button -->
-                                            <button type="button" class="btn btn-sm btn-outline-primary"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#editModal-{{ $transaction->id }}">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-
-                                            <!-- Delete Button -->
-                                            <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST" class="d-inline" id="delete-form-{{ $transaction->id }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" class="btn btn-sm btn-outline-danger transactions-delete-btn" data-id="{{ $transaction->id }}">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-
-                                        </td>
+                                        <th scope="col" style="width: 10%;">Transaction <br> Type</th>
+                                        <th scope="col" style="width: 20%;">Bank Name</th>
+                                        <th scope="col" style="width: 20%;">A/C Number</th>
+                                        <th scope="col" style="width: 20%;">Branch Name</th>
+                                        <th scope="col" style="width: 10%;">Opening<br>Balance</th>
+                                        <th scope="col" style="width: 20%;">Actions</th>
                                     </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($transactions as $transaction)
+                                        <tr>
+                                            <td class="fw-bold">{{ $transaction->transaction_type }}</td>
+                                            <td>{{ $transaction->bank_name }}</td>
+                                            <td>{{ $transaction->account_number }}</td>
+                                            <td>{{ $transaction->branch_name }}</td>
+                                            <td>{{ $transaction->opening_balance }}</td>
+                                            <td>
+                                                <!-- Edit Button -->
+                                                <button type="button" class="btn btn-sm btn-outline-primary"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editModal-{{ $transaction->id }}">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
 
-                                    <!-- Edit Modal -->
-                                    <div class="modal fade" id="editModal-{{ $transaction->id }}"
-                                        tabindex="-1"
-                                        aria-labelledby="editModalLabel-{{ $transaction->id }}"
-                                        aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title"
-                                                        id="editModalLabel-{{ $transaction->id }}">Edit
-                                                        Transaction</h5>
-                                                    <button type="button" class="btn-close"
-                                                        data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form
-                                                        action="{{ route('transactions.update', $transaction->id) }}"
-                                                        method="POST" id="transaction_edit_form">
-                                                        @csrf
-                                                        @method('PUT')
+                                                <!-- Delete Button -->
+                                                <form action="{{ route('transactions.destroy', $transaction->id) }}"
+                                                    method="POST" class="d-inline"
+                                                    id="delete-form-{{ $transaction->id }}">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-outline-danger transactions-delete-btn"
+                                                        data-id="{{ $transaction->id }}">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
 
-                                                        <div class="mb-3">
-                                                            <label for="transaction_type"
-                                                                class="form-label">Transaction Type</label>
-                                                            <select name="transaction_type"
-                                                                id="transaction_type_edit"
-                                                                class="form-control" required>
-                                                                <option value="cash"
-                                                                    {{ $transaction->transaction_type == 'cash' ? 'selected' : '' }}>
-                                                                    Cash</option>
-                                                                <option value="bank"
-                                                                    {{ $transaction->transaction_type == 'bank' ? 'selected' : '' }}>
-                                                                    Bank</option>
-                                                            </select>
-                                                        </div>                           
+                                        <!-- Edit Modal -->
+                                        <div class="modal fade" id="editModal-{{ $transaction->id }}" tabindex="-1"
+                                            aria-labelledby="editModalLabel-{{ $transaction->id }}" aria-hidden="true">
+                                            <div class="modal-dialog ">
+                                                <div class="modal-content">
+                                                    <!-- Modal Header -->
+                                                    <div class="modal-header bg-info text-white">
+                                                        <h5 class="modal-title"
+                                                            id="editModalLabel-{{ $transaction->id }}">Edit Transaction
+                                                        </h5>
+                                                        <button type="button" class="btn-close text-white"
+                                                            data-bs-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
 
-                                                        <div id="bankFields-edit">
+                                                    <!-- Modal Body -->
+                                                    <div class="modal-body">
+                                                        <form
+                                                            action="{{ route('transactions.update', $transaction->id) }}"
+                                                            method="POST" id="transaction_edit_form">
+                                                            @csrf
+                                                            @method('PUT')
+
+                                                            <!-- Transaction Type Dropdown -->
                                                             <div class="mb-3">
-                                                                <label for="bank_name" class="form-label">Bank
-                                                                    Name</label>
-                                                                <input type="text" class="form-control"
-                                                                    name="bank_name"
-                                                                    value="{{ $transaction->bank_name }}">
+                                                                <label for="transaction_type"
+                                                                    class="form-label">Transaction Type</label>
+                                                                <!-- Hidden field to submit the transaction type -->
+                                                                <input type="hidden" name="transaction_type"
+                                                                    value="{{ $transaction->transaction_type }}">
+
+                                                                <!-- Disabled select dropdown -->
+                                                                <select name="transaction_type"
+                                                                    id="transaction_type_edit" class="form-control"
+                                                                    required disabled>
+                                                                    <option value="cash"
+                                                                        {{ $transaction->transaction_type == 'cash' ? 'selected' : '' }}>
+                                                                        Cash</option>
+                                                                    <option value="bank"
+                                                                        {{ $transaction->transaction_type == 'bank' ? 'selected' : '' }}>
+                                                                        Bank</option>
+                                                                </select>
                                                             </div>
-                                                            <div class="mb-3">
-                                                                <label for="account_number"
-                                                                    class="form-label">A/C Number</label>
-                                                                <input type="text" class="form-control"
-                                                                    name="account_number"
-                                                                    value="{{ $transaction->account_number }}"
-                                                                    maxlength="12">
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="branch_name"
-                                                                    class="form-label">Branch Name</label>
-                                                                <input type="text" class="form-control"
-                                                                    name="branch_name"
-                                                                    value="{{ $transaction->branch_name }}">
+
+                                                            <!-- Bank Details Section -->
+                                                            <div id="bankFields-edit">
+                                                                <div class="mb-3">
+                                                                    <label for="bank_name" class="form-label">Bank
+                                                                        Name</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="bank_name"
+                                                                        value="{{ $transaction->bank_name }}">
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="account_number" class="form-label">A/C
+                                                                        Number</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="account_number"
+                                                                        value="{{ $transaction->account_number }}"
+                                                                        maxlength="12">
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="branch_name" class="form-label">Branch
+                                                                        Name</label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="branch_name"
+                                                                        value="{{ $transaction->branch_name }}">
+                                                                </div>
+
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="opening_balance"
@@ -199,25 +211,54 @@
                                                                     name="opening_balance"
                                                                     value="{{ $transaction->opening_balance }}">
                                                             </div>
-
-                                                        </div>
-
-                                                        <button type="submit"
-                                                            class="btn btn-primary">Update</button>
-                                                    </form>
+                                                            <!-- Submit Button -->
+                                                            <div class="d-flex justify-content-end">
+                                                                <button type="submit"
+                                                                    class="btn btn-primary">Update</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
 
+    
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050">
+        <div id="liveToast" class="toast align-items-center text-bg-success border-0" role="alert"
+            aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    @if (session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Success!</strong> {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    @if (session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Error!</strong> {{ session('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
+                    @endif
+                </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="//cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css">
@@ -231,19 +272,20 @@
 
     <script>
         $(document).ready(function() {
-            
+
             $('#transaction-table').DataTable({
                 paging: true, // Enable pagination
                 searching: true, // Enable search
                 ordering: false, // Disable column sorting
                 info: true // Display table information
             });
-            
+
 
             $(document).on('click', '.transactions-delete-btn', function() {
                 var transactionId = $(this).data('id'); // Get the transaction ID
-                var form = $('#delete-form-' + transactionId); // Get the form associated with the transaction
-                
+                var form = $('#delete-form-' +
+                    transactionId); // Get the form associated with the transaction
+
                 // SweetAlert confirmation
                 Swal.fire({
                     title: 'Are you sure?',
@@ -256,7 +298,8 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // Submit the form after confirmation
-                        form.submit();  // This will trigger the form's POST request to delete the transaction
+                        form
+                            .submit(); // This will trigger the form's POST request to delete the transaction
                     }
                 });
             });
@@ -301,7 +344,7 @@
 
         });
     </script>
-   
+
     <script>
         // Show the message container
         const message = document.getElementById('message');
@@ -313,7 +356,6 @@
                 message.style.display = 'none';
             }, 3000);
         }
-        
     </script>
-    
+
 </x-app-layout>

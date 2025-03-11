@@ -86,24 +86,23 @@
 
     <div class="container-fluid" id="main-content" style="transition: 0.3s;">
         <div class="mt-4 mx-auto px-2" style="width: 100%;">
+            
             <div class="container-fluid mt-5 bg-light p-4 rounded shadow">
-                <h2 class="text-center text-primary mb-4" style="    background-color: antiquewhite;
-    border-radius: 10px;
-    padding: 10px;">Supplier List</h2>
-
-                <div class="card shadow-lg">
+               
+                <div class="card shadow-lg" style="width: 80%; margin-x:auto">
                     <div class="card-header bg-primary text-white text-center">
                         <h5 class="mb-0">Supplier Details</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered text-center align-middle" id="supplier-table">
-                                <thead class="table-dark">
+                                <thead class="thead-dark">
                                     <tr>
                                         <th scope="col">Supplier Name</th>
                                         <th scope="col">Phone Number</th>
                                         <th scope="col">Email</th>
                                         <th scope="col">Address</th>
+                                        <th scope="col">Due</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
@@ -114,6 +113,7 @@
                                         <td>{{ $supplier->phone }}</td>
                                         <td>{{ $supplier->email }}</td>
                                         <td>{{ $supplier->address }}</td>
+                                        <td>{{ $supplier->opening_balance }}</td>
                                         <td>
                                             <!-- Edit Button -->
                                             <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editSupplierModal"
@@ -121,23 +121,26 @@
                                                 data-email="{{ $supplier->email }}" data-address="{{ $supplier->address }}">
                                                 <i class="fas fa-edit"></i>
                                             </a>
+                                            
                                             <!-- WhatsApp Chat -->
                                             <a href="https://wa.me/+88{{ $supplier->phone }}" target="_blank" class="btn btn-success btn-sm">
-                                                <i class="fab fa-whatsapp"></i> 
+                                                <i class="fab fa-whatsapp"></i>
                                             </a>
+
+                                            <!-- Delete Button -->
                                             <a href="#" class="btn btn-danger btn-sm delete-supplier" data-id="{{ $supplier->id }}">
                                                 <i class="fas fa-trash-alt"></i>
                                             </a>
                                         </td>
                                     </tr>
-                                @endforeach
-                                
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -147,9 +150,11 @@
     <div class="modal fade" id="editSupplierModal" tabindex="-1" aria-labelledby="editSupplierModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editSupplierModalLabel">Edit Supplier</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title text-white fw-bold" id="editSupplierModalLabel">Edit Supplier</h5>
+                    <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <form id="editSupplierForm" method="POST" action="{{ route('suppliers.update') }}">

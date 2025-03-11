@@ -59,7 +59,7 @@
     </style>
 
 <style>
-    @media (max-width: 800px) {
+    @media (max-width: 1200px) {
 
         #contentdiv{
             width: 100%!important;

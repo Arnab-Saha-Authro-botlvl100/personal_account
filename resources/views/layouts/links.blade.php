@@ -137,21 +137,6 @@
         overflow-x: hidden;
     }
 
-    /* Sidebar for larger screens */
-    /* .sidebar {
-        width: 250px; 
-        height: 100vh;
-        position: fixed;
-        left: 0;
-        background: linear-gradient(145deg, #6c859e, #5a7185); 
-        color: white;
-        padding: 15px;
-        overflow-y: auto;
-        transition: width 0.3s ease-in-out; 
-        z-index: 30000;
-        box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2); 
-        border-radius: 0 15px 15px 0; 
-    } */
     .sidebar {
         width: 250px;
         height: 100vh;
@@ -756,16 +741,39 @@
 
 <!-- Notification Modal -->
 <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content shadow-lg rounded-3">
+            <!-- Modal Header -->
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold" id="notificationModalLabel">Notifications</h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="notificationList">
-                <p class="text-center text-muted">Loading...</p>
+
+            <!-- Modal Body -->
+            <div class="modal-body px-4 py-3">
+                <!-- Notifications List -->
+                <div id="notificationList">
+                    <!-- Example notification item -->
+                    <div class="notification-item p-3 mb-3 border rounded-3">
+                        <h6 class="fw-semibold">Sample Notification Title</h6>
+                        <p class="text-muted mb-1">This is the description of the notification. It can be longer depending on the content.</p>
+                        <small class="text-muted">Just now</small>
+                    </div>
+
+                    <!-- Another Example notification item -->
+                    <div class="notification-item p-3 mb-3 border rounded-3">
+                        <h6 class="fw-semibold">Another Notification</h6>
+                        <p class="text-muted mb-1">Here’s another notification example, with some different content for variety.</p>
+                        <small class="text-muted">5 minutes ago</small>
+                    </div>
+
+                    <!-- Loading placeholder -->
+                    <p class="text-center text-muted" id="loadingText">Loading notifications...</p>
+                </div>
             </div>
-            <div class="modal-footer">
+
+            <!-- Modal Footer -->
+            <div class="modal-footer bg-light">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -773,57 +781,70 @@
 </div>
 
 
-<!-- Modal for Notes -->
+<!-- Note Modal -->
 <div class="modal fade" id="notesModal" tabindex="-1" aria-labelledby="notesModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="notesModalLabel">Add New Note</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content shadow-lg rounded-3">
+            <!-- Modal Header -->
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold" id="notesModalLabel">Add New Note</h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form id="notesForm" method="POST" action="{{route('notes.store')}}">
+
+            <!-- Modal Body -->
+            <div class="modal-body px-4 py-3">
+                <form id="notesForm" method="POST" action="{{ route('notes.store') }}">
                     @csrf
                     <div class="mb-3">
-                        <label for="noteTitle" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="noteTitle" name="title" required>
+                        <label for="noteTitle" class="form-label fw-semibold">Title</label>
+                        <input type="text" class="form-control" id="noteTitle" name="title" required placeholder="Enter note title">
                     </div>
+
                     <div class="mb-3">
-                        <label for="noteDate" class="form-label">Date</label>
+                        <label for="noteDate" class="form-label fw-semibold">Date</label>
                         <input type="date" class="form-control" id="noteDate" name="date" required>
                     </div>
+
                     <div class="mb-3">
-                        <label for="noteDescription" class="form-label">Description</label>
-                        <textarea class="form-control" id="noteDescription" name="description" rows="3" required></textarea>
+                        <label for="noteDescription" class="form-label fw-semibold">Description</label>
+                        <textarea class="form-control" id="noteDescription" name="description" rows="3" required placeholder="Enter the note description"></textarea>
                     </div>
+
                     <div class="mb-3">
-                        <label for="noteStatus" class="form-label">Status</label>
+                        <label for="noteStatus" class="form-label fw-semibold">Status</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-tasks"></i></span>
-                            <select class="form-select" id="noteStatus" name="status" style="width: 90%">
+                            <select class="form-select" id="noteStatus" name="status" style="width: 93%">
                                 <option value="pending" selected>Pending</option>
                                 <option value="completed">Completed</option>
                             </select>
                         </div>
                     </div>
-                    
-                    <button type="submit" class="btn btn-primary">Save Note</button>
+                     <!-- Modal Footer (Close Button) -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Save Note</button>
+
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times"></i> Close
+                        </button>
+                    </div>
                 </form>
             </div>
+
+           
         </div>
     </div>
 </div>
 
 
 <!-- Agent Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Agent</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <!-- Modal Header with custom background -->
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title fw-bold" id="exampleModalLabel">Add Agent</h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -832,14 +853,13 @@
             <div class="modal-body">
                 <form id="agent-form" action="{{ route('agents.store') }}" method="POST">
                     @csrf
-                    <div class="grid grid-cols-2 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <!-- Agent Name -->
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-700">Agent Name</label>
                             <div class="mt-1">
-                                <input id="name" name="name" type="text" autocomplete="given-name"
-                                    required
-                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <input id="name" name="name" type="text" autocomplete="given-name" required
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-info-500 focus:border-info-500 sm:text-sm">
                             </div>
                         </div>
 
@@ -848,7 +868,7 @@
                             <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
                             <div class="mt-1">
                                 <input id="phone" name="phone" type="tel" required
-                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-info-500 focus:border-info-500 sm:text-sm">
                             </div>
                         </div>
 
@@ -857,7 +877,7 @@
                             <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                             <div class="mt-1">
                                 <input id="email" name="email" type="email"
-                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-info-500 focus:border-info-500 sm:text-sm">
                             </div>
                         </div>
 
@@ -866,7 +886,7 @@
                             <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
                             <div class="mt-1">
                                 <input id="address" name="address" type="text" autocomplete="street-address"
-                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-info-500 focus:border-info-500 sm:text-sm">
                             </div>
                         </div>
                     </div>
@@ -875,14 +895,14 @@
                     <div class="mt-6 flex justify-between">
                         <!-- Submit Button -->
                         <button type="submit"
-                            class="btn-success text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            class="btn-success text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-info-500">
                             Submit
                         </button>
 
                         <!-- Cancel Button -->
                         <button type="button"
                             class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                            data-dismiss="modal"> <!-- Add data-dismiss="modal" to close the modal -->
+                            data-bs-dismiss="modal">
                             Cancel
                         </button>
                     </div>
@@ -892,42 +912,38 @@
     </div>
 </div>
 
-
-<!--Service Modal -->
-<div class="modal fade" id="servicemodal" tabindex="-1" role="dialog" aria-labelledby="servicemodalLabel"
-    aria-hidden="true">
+<!-- Service Modal -->
+<div class="modal fade" id="servicemodal" tabindex="-1" role="dialog" aria-labelledby="servicemodalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="servicemodalLabel">Add Service</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+        <div class="modal-content shadow-lg rounded-3">
+            <!-- Modal Header with custom background -->
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold" id="servicemodalLabel">Add Service</h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+
+            <!-- Modal Body -->
+            <div class="modal-body px-4 py-3">
                 <form id="service-form" action="{{ route('services.store') }}" method="POST">
                     @csrf
-                    <div class="grid grid-cols-2 sm:grid-cols-2 gap-4">
-                        <!-- First Name -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Service Name -->
                         <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700">Service
-                                Name</label>
+                            <label for="name" class="block text-sm font-medium text-gray-700">Service Name</label>
                             <div class="mt-1">
-                                <input id="name" name="name" type="text" autocomplete="given-name"
-                                    required
-                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <input id="name" name="name" type="text" autocomplete="given-name" required
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-success-500 focus:border-success-500 sm:text-sm">
                             </div>
                         </div>
 
-
-
-                        <!-- Address -->
+                        <!-- Service Details -->
                         <div>
-                            <label for="details" class="block text-sm font-medium text-gray-700">Service
-                                Details</label>
+                            <label for="details" class="block text-sm font-medium text-gray-700">Service Details</label>
                             <div class="mt-1">
                                 <textarea id="details" name="details" autocomplete="street-details"
-                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-success-500 focus:border-success-500 sm:text-sm"></textarea>
                             </div>
                         </div>
                     </div>
@@ -936,65 +952,65 @@
                     <div class="mt-6 flex justify-between">
                         <!-- Submit Button -->
                         <button type="submit"
-                            class="btn-success text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            class="btn-success text-white px-4 py-2 rounded-md hover:bg-success-600 focus:outline-none focus:ring-2 focus:ring-success-500">
                             Submit
                         </button>
 
                         <!-- Cancel Button -->
-                        <button type="button" onclick="document.getElementById('agent-form').reset()"
-                            class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                        <button type="button" onclick="document.getElementById('service-form').reset()"
+                            class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                            data-bs-dismiss="modal">
                             Cancel
                         </button>
                     </div>
                 </form>
-
             </div>
 
         </div>
     </div>
 </div>
 
-
-<!--Supplier Modal -->
-<div class="modal fade" id="supplierModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<!-- Supplier Modal -->
+<div class="modal fade" id="supplierModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Supplier</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+        <div class="modal-content shadow-lg rounded-3">
+            <!-- Modal Header with custom background -->
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title fw-bold" id="exampleModalLabel">Add Supplier</h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+
+            <!-- Modal Body -->
+            <div class="modal-body px-4 py-3">
                 <form id="supplier-form" method="post" action="{{ route('supplier.store') }}">
                     @csrf
-                    <div class="grid grid-cols-2 sm:grid-cols-2 gap-4">
-                        <!-- First Name -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Supplier Name -->
                         <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700">Supplier
-                                name</label>
+                            <label for="name" class="block text-sm font-medium text-gray-700">Supplier Name</label>
                             <div class="mt-1">
-                                <input id="name" name="name" type="text" autocomplete="given-name"
-                                    required
-                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <input id="name" name="name" type="text" autocomplete="given-name" required
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-info-500 focus:border-info-500 sm:text-sm">
                             </div>
                         </div>
 
+                        <!-- Phone Number -->
                         <div>
-                            <label for="phone" class="block text-sm font-medium text-gray-700">Phone
-                                Number</label>
+                            <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
                             <div class="mt-1">
                                 <input id="phone" name="phone" type="number" required
-                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-info-500 focus:border-info-500 sm:text-sm">
                             </div>
                         </div>
 
+                        <!-- Email -->
                         <div>
                             <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                             <div class="mt-1">
                                 <input id="email" name="email" type="email"
-                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-info-500 focus:border-info-500 sm:text-sm">
                             </div>
                         </div>
 
@@ -1003,45 +1019,48 @@
                             <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
                             <div class="mt-1">
                                 <input id="address" name="address" type="text" autocomplete="street-address"
-                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-info-500 focus:border-info-500 sm:text-sm">
                             </div>
                         </div>
                     </div>
+
                     <!-- Buttons -->
                     <div class="mt-6 flex justify-between">
                         <!-- Submit Button -->
                         <button type="submit"
-                            class="btn-success text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            class="btn-info text-white px-4 py-2 rounded-md hover:bg-info-600 focus:outline-none focus:ring-2 focus:ring-info-500">
                             Submit
                         </button>
 
                         <!-- Cancel Button -->
                         <button type="button" onclick="document.getElementById('supplier-form').reset()"
-                            class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                            class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500" data-bs-dismiss="modal">
                             Cancel
                         </button>
                     </div>
                 </form>
             </div>
-
         </div>
     </div>
 </div>
 
 
-
 <!-- Transaction Modal -->
 <div class="modal fade" id="transactionModal" tabindex="-1" aria-labelledby="transactionModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Agent</h5>
+    <div class="modal-dialog  modal-dialog-centered">
+        <div class="modal-content shadow-lg border-0 rounded-lg">
+            {{-- <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Transaction</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+            </div> --}}
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold">Add Transaction</h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body px-4 py-3">
                 <form id="transactionForm" action="{{ route('transactions.store') }}" method="POST">
                     @csrf
 
@@ -1049,7 +1068,7 @@
                     <div class="mb-3">
                         <label for="type" class="form-label">Transaction Type</label>
                         <select name="transaction_type" id="type" class="form-control" required>
-                            <option value="">...</option>
+                            <option value="">Select Transaction Type...</option>
                             <option value="bank">Bank</option>
                             <option value="cash">Cash</option>
 
@@ -1058,7 +1077,9 @@
 
 
                     <!-- Bank Fields (Initially Hidden) -->
-                    <div id="bankFields" style="display: none;">
+                    <div id="bankFields" style="display: none;" class="border p-3 rounded bg-light">
+                        <h6 class="text-primary mb-3">Bank Details</h6>
+
                         <!-- Bank Name -->
                         <div class="mb-3">
                             <label for="bank_name" class="form-label">Bank Name</label>
@@ -1090,7 +1111,7 @@
 
                 </form>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer bg-light">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="transactionForm" class="btn btn-primary">Save Transaction</button>
             </div>
@@ -1098,34 +1119,37 @@
     </div>
 </div>
 
+
 <!-- Previous Due Modal -->
 <div class="modal fade" id="previousDueModal" tabindex="-1" aria-labelledby="previousDueModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="previousDueModalLabel">Add Previous Due</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+        <div class="modal-content shadow-lg rounded-3">
+            <!-- Modal Header with custom background -->
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title fw-bold" id="previousDueModalLabel">Add Previous Due</h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+
+            <!-- Modal Body -->
+            <div class="modal-body px-4 py-3">
                 <form id="previousDueForm">
                     @csrf
-
-                    <!-- Select Agent or Supplier -->
+                    <!-- Select Type -->
                     <div class="mb-3">
                         <label for="typeSelect" class="form-label">Select Type</label>
-                        <select class="form-control" id="typeSelect" name="type">
+                        <select class="form-control form-select" id="typeSelect" name="type">
                             <option value="">-- Select Type --</option>
                             <option value="agent">Agent</option>
                             <option value="supplier">Supplier</option>
                         </select>
                     </div>
 
-                    <!-- Dependent Dropdown -->
+                    <!-- Agent Select Dropdown (Initially hidden) -->
                     <div class="mb-3" id="agentSelectDiv" style="display: none;">
                         <label for="agentSelect" class="form-label">Select Agent</label>
-                        <select class="form-control" id="agentSelect" name="agent_id">
+                        <select class="form-control form-select" id="agentSelect" name="agent_id">
                             <option value="">-- Select Agent --</option>
                             @foreach ($agents as $agent)
                                 <option value="{{ $agent->id }}">{{ $agent->name }}</option>
@@ -1133,9 +1157,10 @@
                         </select>
                     </div>
 
+                    <!-- Supplier Select Dropdown (Initially hidden) -->
                     <div class="mb-3" id="supplierSelectDiv" style="display: none;">
                         <label for="supplierSelect" class="form-label">Select Supplier</label>
-                        <select class="form-control" id="supplierSelect" name="supplier_id">
+                        <select class="form-control form-select" id="supplierSelect" name="supplier_id">
                             <option value="">-- Select Supplier --</option>
                             @foreach ($suppliers as $supplier)
                                 <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
@@ -1155,12 +1180,25 @@
                         <textarea class="form-control" id="note" name="note" rows="3" placeholder="Enter a note"></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-between">
+                        <!-- Save Button -->
+                        <button type="submit" class="btn btn-warning text-white px-4 py-2 rounded-md hover:bg-warning-600 focus:outline-none focus:ring-2 focus:ring-warning-500">
+                            Save
+                        </button>
+
+                        <!-- Cancel Button -->
+                        <button type="button" onclick="document.getElementById('previousDueForm').reset()"
+                            class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500" data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 
 
 <script>

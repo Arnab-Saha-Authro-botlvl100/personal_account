@@ -1,20 +1,21 @@
 <x-app-layout>
     @if(session('clipboard_text'))
-    <textarea id="clipboardText" style="position: absolute; left: -9999px;">{{ session('clipboard_text') }}</textarea>
+        <!-- Hidden Textarea for Copying -->
+        <textarea id="clipboardText" style="position: absolute; left: -9999px;">{{ session('clipboard_text') }}</textarea>
 
-    <!-- Bootstrap Toast -->
-    <div class="toast-container position-fixed" style="right: 0; bottom: 0; z-index: 1050; padding: 1rem;">
-        <div id="copyToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="polite" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body" style="background-color: #28a79a; color: white; padding: 10px 20px; border-radius: 5px;">
-                    Payment information copied to clipboard!
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        <!-- Bootstrap Toast -->
+        <div class="toast-container position-fixed" style="right: 0; bottom: 0; z-index: 1050; padding: 1rem;">
+            <div id="copyToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="polite" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body" style="background-color: #28a79a; color: white; padding: 10px 20px; border-radius: 5px;">
+                        Payment information copied to clipboard!
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
             </div>
         </div>
-        
     @endif
+
     <div class="container mt-4">
           <!-- Card Header -->
         <div class="card-header bg-primary text-dark text-center py-4">
@@ -61,7 +62,20 @@
                                 <span class="badge bg-warning text-dark">{{ number_format($latestPayment->amount, 2) }} BDT</span>
                             </p>
                             <p class="mb-1"><strong>Transaction Method:</strong> {{ ucfirst($latestPayment->transaction_method) }}</p>
-                            <p class="mb-1"><strong>Bank:</strong> {{ $latestPayment->bank_name ?? 'N/A' }}</p>
+                            <p class="mb-1"><strong>Bank:</strong>
+                                @php
+                                    // Using the full namespace for the Transaction model
+                                    $transaction = \App\Models\Transaction::where('id', $latestPayment->bank_name)->first();  // Use first() for a single result
+                            
+                                    // Check if the transaction exists
+                                    $bank_name = $transaction->bank_name ?? 'N/A';
+                                    $account_number = $transaction->account_number ?? 'N/A';
+                                    $branch_name = $transaction->branch_name ?? 'N/A';
+                                @endphp
+                                <strong>Bank Name:</strong> {{ $bank_name }} <br>
+                                <strong>Account Number:</strong> {{ $account_number }} <br>
+                                <strong>Branch Name:</strong> {{ $branch_name }}
+                            </p>                                                       
                             <p class="mb-1"><strong>Note:</strong> {{ $latestPayment->note ?? 'N/A' }}</p>
                         </div>
                     </div>
@@ -119,7 +133,20 @@
                                 <span class="badge bg-warning text-dark">{{ number_format($latestPayment->amount, 2) }} BDT</span>
                             </p>
                             <p class="mb-1"><strong>Transaction Method:</strong> {{ ucfirst($latestPayment->transaction_method) }}</p>
-                            <p class="mb-1"><strong>Bank:</strong> {{ $latestPayment->bank_name ?? 'N/A' }}</p>
+                            <p class="mb-1"><strong>Bank:</strong>
+                                @php
+                                    // Using the full namespace for the Transaction model
+                                    $transaction = \App\Models\Transaction::where('id', $latestPayment->bank_name)->first();  // Use first() for a single result
+                            
+                                    // Check if the transaction exists
+                                    $bank_name = $transaction->bank_name ?? 'N/A';
+                                    $account_number = $transaction->account_number ?? 'N/A';
+                                    $branch_name = $transaction->branch_name ?? 'N/A';
+                                @endphp
+                                <strong>Bank Name:</strong> {{ $bank_name }} <br>
+                                <strong>Account Number:</strong> {{ $account_number }} <br>
+                                <strong>Branch Name:</strong> {{ $branch_name }}
+                            </p>                                                       
                             <p class="mb-1"><strong>Note:</strong> {{ $latestPayment->note ?? 'N/A' }}</p>
                         </div>
                     </div>

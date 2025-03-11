@@ -84,23 +84,13 @@ header .nav-bar {
     justify-content: space-between;
     padding: 0 100px;
     transition: 0.3s ease;
-    background: #223071c2;
+    background: #d0d6f1c2;
 }
 
 .nav-close-btn,
 .nav-menu-btn {
     display: none!important;
 }
-
-/* .nav-bar .logo {
-    color: var(--white-color);
-    font-size: 1.8em;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-decoration: none;
-    text-shadow: var(--text-shadow);
-} */
 
 .nav-bar .logo {
     font-size: 1.8em;
@@ -109,7 +99,6 @@ header .nav-bar {
     text-transform: uppercase;
     text-decoration: none;
 
-    /* Gradient text */
     background: var(--gradient-red-blue);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -118,23 +107,13 @@ header .nav-bar {
 }
 
 .navigation .nav-items a {
-    color: var(--white-color);
+    color: var(--dark-color);
     font-size: 1em;
+    font-weight: 600;
     text-decoration: none;
     text-shadow: var(--text-shadow);
 }
 
-/* .navigation .nav-items a {
-    font-size: 1em;
-    text-decoration: none;
-    text-shadow: var(--text-shadow);
-
-    background: var(--gradient-red-blue);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
-} */
 
 .navigation .nav-items a i {
     display: none;

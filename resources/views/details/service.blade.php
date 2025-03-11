@@ -2,7 +2,7 @@
     <style>
         @media (min-width: 769px) {
             #main-content {
-                margin-left: 250px;
+                margin-left: 150px;
                 /* Match the width of the sidebar */
                 transition: 0.3s;
                 /* Smooth transition for margin */
@@ -71,31 +71,21 @@
         }
     </style>
 
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-    @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
+
 
     @include('layouts.links')
 
     <div class="container-fluid" id="main-content" style="transition: 0.3s;">
         <div class="mt-4 mx-auto px-2" style="width: 100%;">
-            <div class="container-fluid mt-5 bg-light p-4 rounded shadow">
-                <h2 class="text-center text-primary mb-4" style="    background-color: antiquewhite;
-    border-radius: 10px;
-    padding: 10px;">Service List</h2>
-
-                <div class="card-body">
+            <div class="container-fluid mt-5">
+                <div class="bg-white p-4 rounded shadow-lg"  style="width: 80%; margin: auto;">
+                    {{-- <h4 class="mb-4 text-center text-primary">Service List</h4> --}}
+                    <div class="card-header bg-primary text-white text-center">
+                        <h5 class="mb-0">Service Details</h5>
+                    </div>
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered text-center align-middle"
-                            id="service-table">
-                            <thead class="table-dark">
+                        <table class="table table-hover table-bordered text-center align-middle" id="service-table">
+                            <thead class="thead-dark">
                                 <tr>
                                     <th scope="col" style="width: 20%;">Service Name</th>
                                     <th scope="col" style="width: 60%;">Service Details</th>
@@ -105,25 +95,51 @@
                             <tbody>
                                 @foreach ($services as $service)
                                     <tr>
-                                        <td class="fw-bold">{{ $service->name }}</td>
-                                        <td>{{ $service->details }}</td>
+                                        <td class="fw-bold text-dark">{{ $service->name }}</td>
+                                        <td class="text-muted">{{ $service->details }}</td>
                                         <td>
                                             <!-- Delete Button -->
-                                            <button class="btn btn-sm btn-outline-danger delete-btn" data-id="{{ $service->id }}">
+                                            <button class="btn btn-sm btn-danger delete-btn" data-id="{{ $service->id }}">
                                                 <i class="fas fa-trash"></i> Delete
                                             </button>
                                         </td>
                                     </tr>
                                 @endforeach
-                            
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
+            </div>            
         </div>
     </div>
 
+     
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050">
+        <div id="liveToast" class="toast align-items-center text-bg-success border-0" role="alert"
+            aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    @if (session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Success!</strong> {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    @if (session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Error!</strong> {{ session('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
+                    @endif
+                </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="//cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css">

@@ -120,7 +120,7 @@
                                     </div>
 
                                     <!-- Bank Details -->
-                                    <div class="col-12 col-md-10 mb-3" id="bank_details" style="display: none;">
+                                    {{-- <div class="col-12 col-md-10 mb-3" id="bank_details" style="display: none;">
                                         <div class="row">
                                             <!-- Bank Name -->
                                             <div class="col-12 col-md-6 col-lg-4 mb-3">
@@ -158,7 +158,46 @@
 
                                             </div>
                                         </div>
+                                    </div> --}}
+                                    <div class="col-12 col-md-10 mb-3" id="bank_details" style="display: none;">
+                                        <div class="row">
+                                            <!-- Bank Name -->
+                                            <div class="col-12 col-md-6 col-lg-4 mb-3">
+                                                <label for="bank_name" class="form-label">Bank Name</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text"><i class="fa fa-university"></i></span>
+                                                    <select name="bank_name" id="bank_name" class="form-select"
+                                                        style="width: 80%">
+                                                        <option value="">Select a bank</option>
+                                                        @foreach ($banks as $bank)
+                                                            <option value="{{ $bank->id }}"
+                                                                data-account-number="{{ $bank->account_number }}"
+                                                                data-branch-name="{{ $bank->branch_name }}">
+                                                                {{ $bank->bank_name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>                                       
+                                                </div>
+                                            </div>
+
+                                           <!-- Account Number -->
+                                            <div class="col-12 col-md-6 col-lg-4 mb-3">
+                                                <label for="account_number_display" class="form-label">Account Number</label>
+                                                <span id="account_number_display" class="form-control"></span>
+                                                <input type="hidden" name="account_number" id="account_number">
+                                            </div>
+
+                                            <!-- Branch Name -->
+                                            <div class="col-12 col-md-6 col-lg-4 mb-3">
+                                                <label for="branch_name_display" class="form-label">Branch Name</label>
+                                                <span id="branch_name_display" class="form-control"></span>
+                                                <input type="hidden" name="branch_name" id="branch_name">
+                                            </div>
+
+
+                                        </div>
                                     </div>
+
                                 </div>
 
                                 <!-- Amount and Note -->
@@ -195,7 +234,7 @@
                                             <th scope="col">Date</th>
                                             <th scope="col">Receive Type</th>
                                             <th scope="col">Customer Name</th>
-                                            <th scope="col">Contract Invoice</th>
+                                            <th scope="col">Agent</th>
                                             <th scope="col">Agent Contract</th>
                                             <th scope="col">Transaction Method</th>
                                             <th scope="col">Amount</th>
@@ -369,31 +408,108 @@
                     $('#bank_details').show();
                 } else {
                     $('#bank_details').hide();
-                    $('#bank_name').val('');
-                    $('#account_number2').val('');
-                    $('#branch_name2').val('');
+                    $('#bank_name, #account_number2, #branch_name2').val('');
+                    $('#account_number, #branch_name').text(''); // Clear displayed text
                 }
             });
-        });
-    </script>
 
-    <script>
-        $(document).ready(function () {
-           
+            // Populate bank details on bank selection
             $(document).on('change', '#bank_name', function () {
-               
                 const selectedBank = $(this).find(':selected');
+                
+                const accountNumber = selectedBank.data('account-number') || '';
+                const branchName = selectedBank.data('branch-name') || '';
+
+                // Update displayed values
+                $('#account_number_display').text(accountNumber);
+                $('#branch_name_display').text(branchName);
+    
+                // Update hidden input values to be passed in form submission
+                $('#account_number').val(accountNumber);
+                $('#branch_name').val(branchName);
                
-                  // Use innerHTML to update span content
-                $('#account_number').html(selectedBank.attr('data-account-number'));
-                $('#branch_name').html(selectedBank.attr('data-branch-name'));
-                $('#account_number2').val(selectedBank.attr('data-account-number'));
-                $('#branch_name2').val(selectedBank.attr('data-branch-name'));
+
+            });
+
+            $('#receive_form').on('submit', function (event) {
+                event.preventDefault(); // Prevent default form submission
+
+                let formData = new FormData(this);
+
+                // Manually set account_number and branch_name
+                formData.set('account_number', $('#account_number_display').text());
+                formData.set('branch_name', $('#branch_name_display').text());
+
+                // Submit using AJAX
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: $(this).attr('method'),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            // Parse the clipboard text if available
+                            const clipboardText = JSON.parse(response.clipboard_text); 
+                            let clipboardString = '';
+                            
+                            // Construct the clipboard string from the response
+                            for (const key in clipboardText) {
+                                clipboardString += `${key}: ${clipboardText[key]}\n`;
+                            }
+
+                            // Create a temporary text area for copying the text
+                            const tempTextArea = document.createElement("textarea");
+                            tempTextArea.value = clipboardString;  // The string to be copied
+                            document.body.appendChild(tempTextArea);
+                            tempTextArea.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(tempTextArea);
+
+                            // Show success toast
+                            Swal.fire({
+                                title: "Transaction Successful",
+                                text: response.message,
+                                icon: "success",
+                                confirmButtonText: "OK"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = response.redirect_url; // Redirect to the appropriate page
+                                }
+                            });
+
+                            // Optionally show a separate toast for clipboard success
+                            var clipboardToast = new bootstrap.Toast(document.getElementById('copyToast'));
+                            clipboardToast.show();
+                        }
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
+                        let errorMessage = "Something went wrong. Please try again.";
+                        if (error.responseJSON) {
+                            if (error.responseJSON.errors) {
+                                // Show detailed error messages
+                                errorMessage = Object.values(error.responseJSON.errors).flat().join("\n");
+                            } else if (error.responseJSON.message) {
+                                errorMessage = error.responseJSON.message;
+                            }
+                        }
+                        // Show error alert using SweetAlert
+                        Swal.fire({
+                            title: "Error",
+                            text: errorMessage,
+                            icon: "error",
+                            confirmButtonText: "OK"
+                        });
+                    }
+                });
+
             });
         });
     </script>
 
-     <script>
+   
+    <script>
         // Show the message container
         const message = document.getElementById('message');
         if (message) {

@@ -244,8 +244,11 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/bkash/payment/{user_id}', [App\Http\Controllers\BkashTokenizePaymentController::class, 'index'])
     ->name('bkash.payment.page'); 
     Route::get('/bkash/create-payment/{user_id}', [App\Http\Controllers\BkashTokenizePaymentController::class,'createPayment'])->name('bkash-create-payment');
-    Route::get('/bkash/callback/{user_id}', [App\Http\Controllers\BkashTokenizePaymentController::class, 'callBack'])
+    // Route::get('/bkash/callback/{user_id}', [App\Http\Controllers\BkashTokenizePaymentController::class, 'callBack'])
+    // ->name('bkash-callBack');
+    Route::get('/bkash/callback', [App\Http\Controllers\BkashTokenizePaymentController::class, 'callBack'])
     ->name('bkash-callBack');
+
 
     //search payment
     Route::get('/bkash/search/{trxID}', [App\Http\Controllers\BkashTokenizePaymentController::class,'searchTnx'])->name('bkash-serach');
