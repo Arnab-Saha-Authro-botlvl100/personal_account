@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contract;
-use App\Models\customer;
-use App\Models\agent;
-use App\Models\supplier;
+use App\Models\Customer;
+use App\Models\Agent;
+use App\Models\Supplier;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
