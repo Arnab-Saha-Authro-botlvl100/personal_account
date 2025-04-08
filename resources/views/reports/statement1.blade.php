@@ -14,7 +14,6 @@
             height: auto;
             /* Full height */
             overflow-y: auto;
-            margin-left: -70px;
             /* Enable scrolling if content overflows */
         }
 
@@ -38,7 +37,6 @@
                 border-right: none;
                 /* Remove border on smaller screens */
                 border-bottom: 1px solid #dee2e6;
-                /* margin-left: -10px */
                 /* Add bottom border for separation */
             }
 
@@ -74,12 +72,12 @@
     </style>
     @include('layouts.links')
     <div class="container-fluid" id="main-content" style="transition: 0.3s;">
-        <div class="mt-4 mx-auto px-2">
-            <div class="" id="initial-div">
-                <div class="container-fluid mt-3 mx-auto" style="width: 80%;">
+        <div class="mt-4 mx-auto px-2" style="width: 100%;">
+            <div class="container-fluid" id="initial-div">
+                <div class="container-fluid mt-3">
                     <div class="row">
                         <!-- Left Div (20%) -->
-                        <div class="col-12 col-md-3 left-div mb-3 mb-md-0">
+                        <div class="col-12 col-md-4 left-div mb-3 mb-md-0">
                             <div class="d-flex flex-column">
                                 <!-- Cash and Bank Transactions Table -->
                                 <div class="table-responsive">
@@ -131,7 +129,7 @@
                         </div>
                 
                         <!-- Right Div (80%) with Tables -->
-                        <div class="col-12 col-md-9 right-div">
+                        <div class="col-12 col-md-8 right-div">
                             <!-- Bank Transactions Table -->
                             <div class="table-responsive mb-3">
                                 <table class="table table-bordered table-striped">

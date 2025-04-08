@@ -217,7 +217,7 @@
                                 <button type="submit" id="submit-btn" class="btn btn-success">
                                     Submit
                                 </button>
-                                <button type="button" id="print-btn" class="btn btn-primary" onclick="printDiv('printsection')"> 
+                                <button type="button" id="print-btn" class="btn btn-primary">
                                     <i class="fas fa-print"></i> Print
                                 </button>
                                 <button type="button" id="download-btn" class="btn btn-info">
@@ -232,10 +232,10 @@
                         <thead class="table-dark text-center">
                             <tr>
                                 <th>Date</th>
-                                {{-- <th>Invoice/Customer ID/Type</th> --}}
+                                <th>Invoice/Customer ID/Type</th>
                                 <th>Details</th>
-                                <th>Receive Amount</th>
-                                <th>Payment Amount</th>
+                                <th>Agent Contact</th>
+                                <th>Supplier Contact</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -244,15 +244,14 @@
                                     <tr class="table-customer bg-info-subtle">
                                         <td>
                                             <span
-                                                class="badge bg-info text-white text-uppercase fw-bold">Customer</span>
-                                                <br>
+                                                class="badge bg-info text-white text-uppercase fw-bold">Customer</span><br>
                                             {{ $item->created_at->format('d-m-y') }}
                                         </td>
                                         <td>{{ $item->customer_id }}</td>
                                         <td>
                                             <strong>{{ $item->name }}</strong><br>
-                                             {{ $item->phone_number }}<br>
-                                             {{ $item->passport_number }}
+                                            📞 {{ $item->phone_number }}<br>
+                                            🛂 {{ $item->passport_number }}
                                         </td>
                                         <td><strong class="text-success">{{ $item->agent_contract }}</strong></td>
                                         <td><strong class="text-danger">{{ $item->supplier_contract }}</strong></td>
@@ -260,58 +259,51 @@
                                 @elseif($item->getTable() == 'receives')
                                     <tr class="table-receive bg-success-subtle">
                                         <td>
-                                            {{-- <span
-                                                class="badge bg-success text-white text-uppercase fw-bold">Receive</span><br> --}}
+                                            <span
+                                                class="badge bg-success text-white text-uppercase fw-bold">Receive</span><br>
                                             {{ $item->created_at->format('d-m-y') }}
                                         </td>
-                                        {{-- <td>{{ $item->receive_type }}</td> --}}
+                                        <td>{{ $item->receive_type }}</td>
                                         <td>
-                                            @if ($item->receive_type == 'customer')
-                                                <strong>{{ $item->contract_invoice }}<br>{{ $item->customer_name }}</strong><br>
-                                            @endif
-                                            {{ $item->transaction_method }}<br>
-                                            {{ $item->transaction_bank_name }}<br>
-                                            @if ($item->transaction_method == 'bank')
-                                               AC NO: {{ $item->account_number }} <br> Branch Name: {{ $item->branch_name }}<br>
-                                            @endif
-                                            Note : {{ $item->note }}
+                                            <strong>{{ $item->contract_invoice }}/{{ $item->customer_name }}</strong><br>
+                                            🏦 {{ $item->transaction_method }}<br>
+                                            🏛 {{ $item->transaction_bank_name }}<br>
+                                            💳 {{ $item->account_number }}/ {{ $item->branch_name }}<br>
+                                            📝 {{ $item->note }}
                                         </td>
                                         <td><strong class="text-success">{{ $item->amount }}</strong></td>
-                                        <td></td>
+                                        <td>N/A</td>
                                     </tr>
                                 @elseif($item->getTable() == 'payments')
                                     <tr class="table-payment bg-danger-subtle">
                                         <td>
-                                            {{-- <span
-                                                class="badge bg-danger text-white text-uppercase fw-bold">Payment</span><br> --}}
+                                            <span
+                                                class="badge bg-danger text-white text-uppercase fw-bold">Payment</span><br>
                                             {{ $item->created_at->format('d-m-y') }}
                                         </td>
-                                        {{-- <td>{{ $item->receive_type }}</td> --}}
+                                        <td>{{ $item->receive_type }}</td>
                                         <td>
-                                            @if ($item->receive_type == 'customer')
-                                                <strong>{{ $item->contract_invoice }}<br>{{ $item->customer_name }}</strong><br>
-                                            @endif
-                                             {{ $item->transaction_method }}<br>
-                                             {{ $item->transaction_bank_name }}<br>
-                                             @if ($item->transaction_method == 'bank')
-                                             AC NO: {{ $item->account_number }} <br> Branch Name: {{ $item->branch_name }}<br>
-                                             @endif
-                                             Note : {{ $item->note }}
+                                            <strong>{{ $item->contract_invoice }}/{{ $item->customer_name }}</strong><br>
+                                            💳 {{ $item->transaction_method }}<br>
+                                            🏛 {{ $item->transaction_bank_name }}<br>
+                                            🔢 {{ $item->account_number }}/ {{ $item->branch_name }}<br>
+                                            📝 {{ $item->note }}
                                         </td>
-                                        <td></td>
+                                        <td>N/A</td>
                                         <td><strong class="text-danger">{{ $item->amount }}</strong></td>
                                     </tr>
                                 @elseif($item->getTable() == 'tickets')
                                     <tr class="table-ticket bg-warning-subtle">
                                         <td>
-                                             {{ $item->flight_date->format('d-m-y') }}
+                                            <span
+                                                class="badge bg-warning text-dark text-uppercase fw-bold">Ticket</span><br>
+                                            {{ $item->flight_date->format('d-m-y') }}
                                         </td>
+                                        <td>{{ $item->ticket_no }}</td>
                                         <td>
-                                             <strong>{{ $item->ticket_no }}</strong><br>
-
-                                             {{ $item->flight_no }}<br>
-                                             {{ $item->airline }} / PNR {{ $item->pnr_no }}<br>
-                                             {{ $item->sector }}
+                                            ✈️ {{ $item->flight_no }}<br>
+                                            🏷️ {{ $item->airline }} / PNR {{ $item->pnr_no }}<br>
+                                            📍 {{ $item->sector }}
                                         </td>
                                         <td><strong class="text-warning">{{ $item->debit }}</strong></td>
                                         <td><strong class="text-primary">{{ $item->credit }}</strong></td>
@@ -319,14 +311,15 @@
                                 @elseif($item->getTable() == 'contracts')
                                     <tr class="table-contract bg-secondary-subtle">
                                         <td>
+                                            <span
+                                                class="badge bg-secondary text-white text-uppercase fw-bold">Contract</span><br>
                                             {{ $item->date->format('d-m-y') }}
                                         </td>
-                                        {{-- <td></td> --}}
+                                        <td>{{ $item->invoice_no }}</td>
                                         <td>
-                                             Invoice: {{ $item->invoice_no }}<br>
-                                             Agent: <strong>{{ $item->agent_name }}</strong><br>
-                                             Supplier: <strong>{{ $item->supplier_name }}</strong><br>
-                                             Customer: <strong>{{ $item->customer_name }}</strong>
+                                            👤 Agent: <strong>{{ $item->agent_name }}</strong><br>
+                                            🚛 Supplier: <strong>{{ $item->supplier_name }}</strong><br>
+                                            👨‍💼 Customer: <strong>{{ $item->customer_name }}</strong>
                                         </td>
                                         <td><strong class="text-success">{{ $item->agent_price }}</strong></td>
                                         <td><strong class="text-danger">{{ $item->supplier_price }}</strong></td>
@@ -432,43 +425,47 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 
 <script>
-    function printDiv(divId) {
-            var printContent = document.getElementById(divId).innerHTML; // Get the content of the div
-            var originalContent = document.body.innerHTML; // Save the original content
-        
-            // Create a new window for printing
-            var printWindow = window.open('', '', 'height=600,width=800');
-        
-            // Write the content and styles to the new window
-            printWindow.document.write('<html><head><title>Print</title>');
-        
-            // Copy all styles from the current document (or you can include specific styles)
-            var styles = '';
-            var styleSheets = document.styleSheets;
-            for (var i = 0; i < styleSheets.length; i++) {
-                try {
-                    var rules = styleSheets[i].cssRules || styleSheets[i].rules;
-                    for (var j = 0; j < rules.length; j++) {
-                        styles += rules[j].cssText;
-                    }
-                } catch (e) {
-                    // Handle cross-origin stylesheets, if necessary
-                }
+    $(document).ready(function () {
+        // Print Function
+        $('#print-btn').click(function () {
+            var printContent = document.getElementById('printsection');
+            var newWindow = window.open('', '', 'width=800,height=600');
+            newWindow.document.write('<html><head><title>Print</title>');
+            
+            // Include external CSS (styles from the page)
+            var styles = document.getElementsByTagName('style');
+            for (var i = 0; i < styles.length; i++) {
+                newWindow.document.write('<style>' + styles[i].innerHTML + '</style>');
             }
-        
-            // Include the styles inside the print window
-            printWindow.document.write('<style>' + styles + '</style>');
-        
-            printWindow.document.write('</head><body>');
-            printWindow.document.write(printContent); // Insert the content of the div
-            printWindow.document.write('</body></html>');
-        
-            // Wait for the content to load and then trigger the print dialog
-            printWindow.document.close(); // Close the document for further editing
-            printWindow.focus(); // Focus on the window before printing
-            printWindow.print(); // Trigger the print dialog
-            printWindow.close(); // Close the print window after printing
-    }
+
+            // Or include an external stylesheet
+            // newWindow.document.write('<link rel="stylesheet" href="path-to-your-stylesheet.css">');
+
+            newWindow.document.write('</head><body>');
+            newWindow.document.write(printContent.innerHTML);
+            newWindow.document.write('</body></html>');
+            newWindow.document.close();
+            newWindow.print();
+        });
+
+        // Download as PDF with Styles
+        $('#download-btn').click(function () {
+            var element = document.getElementById('printsection');
+
+            // Use html2pdf.js with the option to include styles
+            html2pdf()
+                .from(element)
+                .set({
+                    html2canvas: {
+                        scale: 2,
+                        logging: true,
+                        letterRendering: true,
+                    },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                })
+                .save('report.pdf');
+        });
+    });
 </script>
 
 

@@ -106,7 +106,7 @@ class ReportController extends Controller
             ->get();    
         // Concatenate all collections
         $merged = collect() // Start with an empty collection
-            ->concat($customers)
+            // ->concat($customers)
             ->concat($receives)
             ->concat($payments)
             ->concat($tickets)
@@ -278,6 +278,8 @@ class ReportController extends Controller
         // dd($sorted);
         $htmlpart = ViewFacade::make('reports.report', [
             'sorted' => $sorted,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
         ])->render();
 
         return response()->json(['html' => $htmlpart]);
@@ -288,6 +290,83 @@ class ReportController extends Controller
         return view('reports.cashbook');
     }
 
+    // public function cashbook_report(Request $request)
+    // {
+    //     if (Auth::user()) {
+    //         // Get the start and end dates
+    //         $start_date = $request->input('start_date') ?? null;
+    //         $end_date = $request->input('end_date') ?? null;
+
+    //         // Convert start_date and end_date to DateTime objects if they are provided
+    //         if ($start_date) {
+    //             $start_date = (new DateTime($start_date))->format('Y-m-d');
+    //         }
+
+    //         if ($end_date) {
+    //             $end_date = (new DateTime($end_date))->format('Y-m-d');
+    //         }
+
+    //         // Get the authenticated user ID
+    //         $user = Auth::id();
+
+    //         // Initialize query builders for each model
+    //         $receives = Receive::where('user', $user);
+    //         $payments = Payment::where('user', $user);
+
+    //         // Apply date-wise search if start_date and end_date are available
+    //         if ($start_date && $end_date) {
+    //             $receives->whereBetween('date', [$start_date, $end_date]);
+    //             $payments->whereBetween('date', [$start_date, $end_date]);
+    //         } elseif ($start_date) {
+    //             // Apply only start_date filter if available
+    //             $receives->where('date', '>=', $start_date);
+    //             $payments->where('date', '>=', $start_date);
+    //         } elseif ($end_date) {
+    //             // Apply only end_date filter if available
+    //             $receives->where('date', '<=', $end_date);
+    //             $payments->where('date', '<=', $end_date);
+    //         }
+
+    //         // Execute queries to retrieve data
+    //         $receivesData = $receives->get();
+    //         $paymentsData = $payments->get();
+
+    //         // Merge and sort data by date
+    //         $mergedData = $receivesData->concat($paymentsData)->sortBy('date');
+
+    //         // Initialize totals
+    //         $totals = [];
+    //         $totalDebit = 0;
+    //         $totalCredit = 0;
+
+    //         // Process mergedData
+    //         foreach ($mergedData as $transaction) {
+    //             $methodName = $transaction->transaction_method == 'cash' ? 'cash' : $this->getBankName($transaction->bank_name);
+    //             if ($transaction instanceof Receive) {
+    //                 $totals[$methodName]['debit'] = ($totals[$methodName]['debit'] ?? 0) + $transaction->amount;
+    //                 $totalDebit += $transaction->amount;
+    //             } elseif ($transaction instanceof Payment) {
+    //                 $totals[$methodName]['credit'] = ($totals[$methodName]['credit'] ?? 0) + $transaction->amount;
+    //                 $totalCredit += $transaction->amount;
+    //             }
+    //         }
+
+    //         // Render the report view with the gathered data
+    //         $html = ViewFacade::make('reports.cashbook_report', [
+    //             'start_date' => $start_date,
+    //             'end_date' => $end_date,
+    //             'mergedData' => $mergedData,
+    //             'totals' => $totals,
+    //             'totalDebit' => $totalDebit,
+    //             'totalCredit' => $totalCredit,
+    //             'getBankName' => [$this, 'getBankName'], // Pass the method as a callable
+    //         ])->render();
+
+    //         return response()->json(['html' => $html]);
+    //     } else {
+    //         return view('welcome');
+    //     }
+    // }
     public function cashbook_report(Request $request)
     {
         if (Auth::user()) {
@@ -295,7 +374,7 @@ class ReportController extends Controller
             $start_date = $request->input('start_date') ?? null;
             $end_date = $request->input('end_date') ?? null;
 
-            // Convert start_date and end_date to DateTime objects if they are provided
+            // Convert start_date and end_date to Y-m-d format
             if ($start_date) {
                 $start_date = (new DateTime($start_date))->format('Y-m-d');
             }
@@ -304,32 +383,40 @@ class ReportController extends Controller
                 $end_date = (new DateTime($end_date))->format('Y-m-d');
             }
 
-            // Get the authenticated user ID
+            // Get authenticated user ID
             $user = Auth::id();
 
-            // Initialize query builders for each model
+            // Calculate opening balances (transactions before start_date)
+            $opening_balance_receive = Receive::where('user', $user)
+                ->where('date', '<', $start_date)
+                ->sum('amount');
+
+            $opening_balance_payment = Payment::where('user', $user)
+                ->where('date', '<', $start_date)
+                ->sum('amount');
+
+            $opening_balance = $opening_balance_receive - $opening_balance_payment;
+
+            // Query transactions within the selected date range
             $receives = Receive::where('user', $user);
             $payments = Payment::where('user', $user);
 
-            // Apply date-wise search if start_date and end_date are available
             if ($start_date && $end_date) {
                 $receives->whereBetween('date', [$start_date, $end_date]);
                 $payments->whereBetween('date', [$start_date, $end_date]);
             } elseif ($start_date) {
-                // Apply only start_date filter if available
                 $receives->where('date', '>=', $start_date);
                 $payments->where('date', '>=', $start_date);
             } elseif ($end_date) {
-                // Apply only end_date filter if available
                 $receives->where('date', '<=', $end_date);
                 $payments->where('date', '<=', $end_date);
             }
 
-            // Execute queries to retrieve data
+            // Get transaction data
             $receivesData = $receives->get();
             $paymentsData = $payments->get();
 
-            // Merge and sort data by date
+            // Merge and sort transactions by date
             $mergedData = $receivesData->concat($paymentsData)->sortBy('date');
 
             // Initialize totals
@@ -337,7 +424,7 @@ class ReportController extends Controller
             $totalDebit = 0;
             $totalCredit = 0;
 
-            // Process mergedData
+            // Process merged transactions
             foreach ($mergedData as $transaction) {
                 $methodName = $transaction->transaction_method == 'cash' ? 'cash' : $this->getBankName($transaction->bank_name);
                 if ($transaction instanceof Receive) {
@@ -349,7 +436,7 @@ class ReportController extends Controller
                 }
             }
 
-            // Render the report view with the gathered data
+            // Render the report view with all data
             $html = ViewFacade::make('reports.cashbook_report', [
                 'start_date' => $start_date,
                 'end_date' => $end_date,
@@ -357,12 +444,14 @@ class ReportController extends Controller
                 'totals' => $totals,
                 'totalDebit' => $totalDebit,
                 'totalCredit' => $totalCredit,
-                'getBankName' => [$this, 'getBankName'], // Pass the method as a callable
+                'opening_balance' => $opening_balance,
+                'getBankName' => [$this, 'getBankName'], // Pass callable method
+                'getBankDetails' => [$this, 'getBankDetails'], // Pass callable method
             ])->render();
 
             return response()->json(['html' => $html]);
         } else {
-            return view('welcome');
+            return redirect()->route('register');
         }
     }
 
@@ -370,6 +459,25 @@ class ReportController extends Controller
     {
         $bank = Transaction::where('id', $bankId)->first();
         return $bank ? $bank->bank_name : 'Unknown Bank';
+    }
+
+    public function getBankDetails($bankId)
+    {
+        $bank = Transaction::where('id', $bankId)->first();
+    
+        if ($bank) {
+            return [
+                'bank_name' => $bank->bank_name,
+                'account_number' => $bank->account_number,
+                'branch_name' => $bank->branch_name
+            ];
+        }
+    
+        return [
+            'bank_name' => 'Unknown Bank',
+            'account_number' => 'Unknown Account',
+            'branch_name' => 'Unknown Branch'
+        ];
     }
 
     public function receive_payment(){
